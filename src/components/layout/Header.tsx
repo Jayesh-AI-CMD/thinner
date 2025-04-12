@@ -37,7 +37,7 @@ const Header = () => {
       <div className="container flex items-center justify-between">
         <div className="flex items-center gap-2 lg:gap-50">
           <Link to="/" className="flex items-center">
-            <span className="text-xl font-bold text-brand-700">ThinnerMart</span>
+            <img src="/public/favicon.ico" alt="Logo" className="h-8 w-8" />
           </Link>
 
           <nav className="hidden md:flex items-center space-x-6">
