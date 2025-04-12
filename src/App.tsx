@@ -22,7 +22,7 @@ import NotFound from "./pages/NotFound";
 
 // Admin Pages
 import Dashboard from "./pages/admin/Dashboard";
-import ProductsPage as AdminProductsPage from "./pages/admin/ProductsPage";
+import AdminProductsPage from "./pages/admin/ProductsPage";
 import OrdersPage from "./pages/admin/OrdersPage";
 import CustomersPage from "./pages/admin/CustomersPage";
 
