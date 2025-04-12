@@ -63,7 +63,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
                 onClick={handleAddSampleToCart}
               >
                 <ShoppingCart className="h-3.5 w-3.5 mr-1" />
-                Add Sample to Cart
+                Add to Cart
               </Button>
             )}
             
