@@ -37,15 +37,7 @@ const Header = () => {
       <div className="container flex items-center justify-between">
         <div className="flex items-center gap-2 lg:gap-50">
           <Link to="/" className="flex items-center">
-            <img 
-              src="/assets/images/logo.png" 
-              alt="ThinnerMart Logo" 
-              className="h-8" 
-              onError={(e) => {
-                e.currentTarget.src = "/assets/images/logo-placeholder.png"; // Fallback image
-                e.currentTarget.onerror = null; // Prevent infinite loop in case fallback also fails
-              }} 
-            />
+            <span className="text-xl font-bold text-brand-700">ThinnerMart</span>
           </Link>
 
           <nav className="hidden md:flex items-center space-x-6">
