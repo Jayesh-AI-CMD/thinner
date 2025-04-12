@@ -127,6 +127,9 @@ const Header = () => {
           <Link to="/contact" className="text-gray-700 hover:text-brand-600 font-medium">
             Contact
           </Link>
+          <Link to="/login" className="text-gray-700 hover:text-brand-600 font-medium">
+            Login
+          </Link>
         </nav>
 
         <div className="flex items-center space-x-4">
