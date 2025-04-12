@@ -26,12 +26,7 @@ const benefits = [
     title: "15 Days Replacement",
     description: "Quality guarantee"
   },
-  {
-    id: 5,
-    icon: BadgeCheck,
-    title: "Verified Merchant",
-    description: "Trusted since 2005"
-  }
+
 ];
 
 // Desktop version
