@@ -80,4 +80,22 @@ const ProductCard = ({ product }: ProductCardProps) => {
   );
 };
 
+export const products = [
+  {
+    id: 2,
+    name: "Product 2",
+    description: "Description for Product 1",
+    image: "/public/card2.png",
+    // ...other properties
+  },
+  {
+    id: 2,
+    name: "Product 3",
+    description: "Description for Product 3",
+    image: "/public/card3.png",
+    // ...other properties
+  },
+  // Add similar entries for other products
+];
+
 export default ProductCard;
