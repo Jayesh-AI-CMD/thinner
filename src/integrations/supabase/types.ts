@@ -9,7 +9,312 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      coupons: {
+        Row: {
+          active: boolean
+          code: string
+          created_at: string | null
+          description: string
+          discount_type: string
+          discount_value: number
+          expires_at: string | null
+          id: string
+          max_discount: number | null
+          min_order_value: number
+          starts_at: string
+          updated_at: string | null
+        }
+        Insert: {
+          active?: boolean
+          code: string
+          created_at?: string | null
+          description: string
+          discount_type: string
+          discount_value: number
+          expires_at?: string | null
+          id?: string
+          max_discount?: number | null
+          min_order_value?: number
+          starts_at?: string
+          updated_at?: string | null
+        }
+        Update: {
+          active?: boolean
+          code?: string
+          created_at?: string | null
+          description?: string
+          discount_type?: string
+          discount_value?: number
+          expires_at?: string | null
+          id?: string
+          max_discount?: number | null
+          min_order_value?: number
+          starts_at?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      order_items: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_sample: boolean
+          name: string
+          order_id: string
+          price: number
+          product_id: string
+          quantity: number
+          size: string | null
+          variant_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_sample?: boolean
+          name: string
+          order_id: string
+          price: number
+          product_id: string
+          quantity: number
+          size?: string | null
+          variant_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_sample?: boolean
+          name?: string
+          order_id?: string
+          price?: number
+          product_id?: string
+          quantity?: number
+          size?: string | null
+          variant_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "product_variants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          created_at: string | null
+          gst_address: string | null
+          gst_business_name: string | null
+          gst_number: string | null
+          id: string
+          payment_id: string | null
+          payment_method: string
+          shipping_address: string
+          shipping_city: string
+          shipping_email: string
+          shipping_name: string
+          shipping_phone: string
+          shipping_pincode: string
+          shipping_state: string
+          status: string
+          subtotal: number
+          tax: number
+          total: number
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          gst_address?: string | null
+          gst_business_name?: string | null
+          gst_number?: string | null
+          id?: string
+          payment_id?: string | null
+          payment_method: string
+          shipping_address: string
+          shipping_city: string
+          shipping_email: string
+          shipping_name: string
+          shipping_phone: string
+          shipping_pincode: string
+          shipping_state: string
+          status?: string
+          subtotal: number
+          tax: number
+          total: number
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          gst_address?: string | null
+          gst_business_name?: string | null
+          gst_number?: string | null
+          id?: string
+          payment_id?: string | null
+          payment_method?: string
+          shipping_address?: string
+          shipping_city?: string
+          shipping_email?: string
+          shipping_name?: string
+          shipping_phone?: string
+          shipping_pincode?: string
+          shipping_state?: string
+          status?: string
+          subtotal?: number
+          tax?: number
+          total?: number
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      product_variants: {
+        Row: {
+          created_at: string | null
+          id: string
+          image: string
+          price: number
+          product_id: string
+          size: string
+          stock: number
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          image: string
+          price: number
+          product_id: string
+          size: string
+          stock?: number
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          image?: string
+          price?: number
+          product_id?: string
+          size?: string
+          stock?: number
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_variants_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      products: {
+        Row: {
+          category: string
+          created_at: string | null
+          description: string
+          features: string[]
+          id: string
+          main_image: string
+          name: string
+          sample_available: boolean
+          sample_price: number | null
+          slug: string
+          updated_at: string | null
+        }
+        Insert: {
+          category: string
+          created_at?: string | null
+          description: string
+          features?: string[]
+          id?: string
+          main_image: string
+          name: string
+          sample_available?: boolean
+          sample_price?: number | null
+          slug: string
+          updated_at?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          description?: string
+          features?: string[]
+          id?: string
+          main_image?: string
+          name?: string
+          sample_available?: boolean
+          sample_price?: number | null
+          slug?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          address: string | null
+          city: string | null
+          created_at: string | null
+          email: string | null
+          gst_address: string | null
+          gst_business_name: string | null
+          gst_number: string | null
+          id: string
+          name: string | null
+          phone: string | null
+          pincode: string | null
+          state: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          address?: string | null
+          city?: string | null
+          created_at?: string | null
+          email?: string | null
+          gst_address?: string | null
+          gst_business_name?: string | null
+          gst_number?: string | null
+          id: string
+          name?: string | null
+          phone?: string | null
+          pincode?: string | null
+          state?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          address?: string | null
+          city?: string | null
+          created_at?: string | null
+          email?: string | null
+          gst_address?: string | null
+          gst_business_name?: string | null
+          gst_number?: string | null
+          id?: string
+          name?: string | null
+          phone?: string | null
+          pincode?: string | null
+          state?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

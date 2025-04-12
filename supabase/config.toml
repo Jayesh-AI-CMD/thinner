@@ -1,1 +1,10 @@
+
 project_id = "fytkhhhlixraqzhimtkh"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "storage", "graphql_public"]
+
+[functions.payment-intent]
+verify_jwt = true
