@@ -96,6 +96,13 @@ export const products = [
     // ...other properties
   },
   // Add similar entries for other products
+  {
+    id: 6,
+    name: "New Product",
+    description: "This is a description for the new product.",
+    image: "/public/new-product.png",
+    // Add other properties as needed
+  },
 ];
 
 export default ProductCard;
