@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "@/hooks/useCart";
@@ -109,10 +108,10 @@ const CheckoutPage = () => {
         
         // Redirect to PhonePe payment page
         window.location.href = paymentResponse.paymentUrl as string;
-      } else if (paymentMethod === "cod") {
-        // For Cash on Delivery, just redirect to confirmation
+      } else if (paymentMethod === "bank_transfer") {
+        // For Bank Transfer, just redirect to confirmation
         clearCart();
-        navigate(`/order/confirmation?orderId=${order.id}&paymentId=cod_${Date.now()}`);
+        navigate(`/order/confirmation?orderId=${order.id}&paymentId=bank_transfer_${Date.now()}`);
       }
     } catch (error: any) {
       console.error("Checkout error:", error);
@@ -402,11 +401,11 @@ const CheckoutPage = () => {
                 </div>
                 
                 <div className="flex items-center space-x-3 rounded-md border p-4">
-                  <RadioGroupItem value="cod" id="cod" />
-                  <Label htmlFor="cod" className="flex-1 cursor-pointer">
+                  <RadioGroupItem value="bank_transfer" id="bank_transfer" />
+                  <Label htmlFor="bank_transfer" className="flex-1 cursor-pointer">
                     <div className="flex items-center">
                       <Truck className="mr-2 h-5 w-5 text-gray-600" />
-                      <span>Cash on Delivery</span>
+                      <span>Bank Transfer</span>
                     </div>
                   </Label>
                 </div>
