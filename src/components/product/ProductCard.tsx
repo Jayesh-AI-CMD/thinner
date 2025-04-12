@@ -51,7 +51,12 @@ const ProductCard = ({ product }: ProductCardProps) => {
         <div>
           <div className="flex justify-between items-center mb-3">
             <span className="text-lg font-medium text-gray-900">From ₹{startingPrice}</span>
-            
+            <img
+            src="/public/card2.png"
+            alt={product.name}
+            title={product.name}
+            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+          />
           </div>
           
           <div className="flex flex-col space-y-2">
