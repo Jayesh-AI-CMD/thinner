@@ -1,7 +1,7 @@
 
 export type ProductSize = "400ML" | "500ML" | "800ML" | "1600ML" | "1L" | "2L" | "4L" | "5L" | "8L" | "10L";
 
-export type ProductCategory = "thinner" | "sample";
+export type ProductCategory = "thinner" | "sample" | "other";
 
 export interface ProductVariant {
   id: string;
@@ -50,6 +50,9 @@ export interface Address {
   state: string;
   postalCode: string;
   country: string;
+  name: string;
+  email: string;
+  phone: string;
 }
 
 export interface GSTDetails {
@@ -83,4 +86,10 @@ export interface Coupon {
   expiryDate: string;
   usageLimit: number;
   usageCount: number;
+}
+
+export interface AdminUser {
+  id: string;
+  email: string;
+  role: "admin" | "staff";
 }

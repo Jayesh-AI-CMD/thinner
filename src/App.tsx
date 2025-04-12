@@ -12,11 +12,19 @@ import Index from "./pages/Index";
 import ProductsPage from "./pages/ProductsPage";
 import ProductDetailPage from "./pages/ProductDetailPage";
 import CartPage from "./pages/CartPage";
+import CheckoutPage from "./pages/CheckoutPage";
+import OrderConfirmationPage from "./pages/OrderConfirmationPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import ContactPage from "./pages/ContactPage";
 import AboutPage from "./pages/AboutPage";
 import NotFound from "./pages/NotFound";
+
+// Admin Pages
+import Dashboard from "./pages/admin/Dashboard";
+import ProductsPage as AdminProductsPage from "./pages/admin/ProductsPage";
+import OrdersPage from "./pages/admin/OrdersPage";
+import CustomersPage from "./pages/admin/CustomersPage";
 
 const queryClient = new QueryClient();
 
@@ -33,11 +41,20 @@ const App = () => (
               <Route path="/products" element={<ProductsPage />} />
               <Route path="/products/:slug" element={<ProductDetailPage />} />
               <Route path="/cart" element={<CartPage />} />
+              <Route path="/checkout" element={<CheckoutPage />} />
+              <Route path="/order/confirmation" element={<OrderConfirmationPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/about" element={<AboutPage />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              
+              {/* Admin Routes */}
+              <Route path="/admin" element={<Dashboard />} />
+              <Route path="/admin/products" element={<AdminProductsPage />} />
+              <Route path="/admin/orders" element={<OrdersPage />} />
+              <Route path="/admin/customers" element={<CustomersPage />} />
+              
+              {/* Catch-all route */}
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
