@@ -29,7 +29,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
       <Link to={`/products/${product.slug}`} className="block overflow-hidden">
         <div className="aspect-square overflow-hidden relative">
           <img
-            src="/public/card1.png"
+            src="/public/sample.png"
             alt={product.name}
             title={product.name}
             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
