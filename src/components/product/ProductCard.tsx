@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/hooks/useCart";
@@ -32,6 +31,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           <img
             src={product.mainImage}
             alt={product.name}
+            title={product.name}
             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
           {product.sampleAvailable && (
@@ -44,8 +44,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
       
       <div className="p-4 flex-grow flex flex-col justify-between">
         <div>
-          <h3 className="text-lg font-semibold mb-1 text-gray-800">{product.name}</h3>
-          <p className="text-sm text-gray-500 mb-3 line-clamp-2">{product.description}</p>
+          <h3 className="text-lg font-semibold mb-1 text-gray-800" title="Premium Thinner Sample Kit – Includes 5 Popular Variants">Premium Thinner Sample Kit – Includes 5 Popular Variants</h3>
+          <p className="text-sm text-gray-500 mb-3 line-clamp-2" title="Try our best-selling thinners with Thinner Mart’s ₹99 Sample Kit. This trial pack includes five of our most popular products: Sailac PU Thinner, Top 2000 High Gloss NC Thinner, Top 999 NC Thinner, Royal 2000 NC Thinner, and Royal GP Thinner.">Try our best-selling thinners with Thinner Mart’s ₹99 Sample Kit. This trial pack includes five of our most popular products: Sailac PU Thinner, Top 2000 High Gloss NC Thinner, Top 999 NC Thinner, Royal 2000 NC Thinner, and Royal GP Thinner.</p>
         </div>
         
         <div>
