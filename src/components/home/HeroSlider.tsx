@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 const slides = [
   {
     id: 1,
-    image: "/hero-slide-1.jpg",
+    image: "/images/slider1-new.jpg",
     title: "Premium Quality Thinners",
     subtitle: "For Professional Painters & Industrial Applications",
     cta: "Shop Now",
@@ -16,7 +16,7 @@ const slides = [
   },
   {
     id: 2,
-    image: "/hero-slide-2.jpg",
+    image: "/images/slider2-new.jpg",
     title: "Royal GP Thinner",
     subtitle: "The Most Versatile General Purpose Thinner",
     cta: "View Details",
@@ -24,7 +24,7 @@ const slides = [
   },
   {
     id: 3,
-    image: "/hero-slide-3.jpg",
+    image: "/images/slider3-new.jpg",
     title: "Sailac PU Thinner",
     subtitle: "Perfect for Polyurethane Coatings",
     cta: "Learn More",
@@ -32,7 +32,7 @@ const slides = [
   },
   {
     id: 4,
-    image: "/hero-slide-4.jpg",
+    image: "/images/slider4-new.jpg",
     title: "Top 999 NC Thinner",
     subtitle: "For Premium Nitrocellulose Finishes",
     cta: "Explore",
@@ -40,7 +40,7 @@ const slides = [
   },
   {
     id: 5,
-    image: "/hero-slide-5.jpg",
+    image: "/images/slider5-new.jpg",
     title: "Industrial Strength Solutions",
     subtitle: "For Manufacturing & Wholesale Needs",
     cta: "Contact Us",
