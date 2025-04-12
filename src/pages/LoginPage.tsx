@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate, Link, Navigate } from "react-router-dom";
@@ -20,6 +19,11 @@ import {
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
+  password: z.string().min(6, { message: "Password must be at least 6 characters" }),
+});
+
+const adminLoginSchema = z.object({
+  username: z.string().min(1, { message: "Username is required" }),
   password: z.string().min(6, { message: "Password must be at least 6 characters" }),
 });
 
@@ -112,4 +116,84 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+const AdminLoginPage = () => {
+  const { signInAdmin, adminUser } = useAuth();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
+  const form = useForm<z.infer<typeof adminLoginSchema>>({
+    resolver: zodResolver(adminLoginSchema),
+    defaultValues: {
+      username: "",
+      password: "",
+    },
+  });
+
+  const onSubmit = async (values: z.infer<typeof adminLoginSchema>) => {
+    try {
+      setLoading(true);
+      await signInAdmin(values.username, values.password);
+      navigate("/admin/dashboard");
+    } catch (error) {
+      console.error("Admin login error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Redirect if already logged in as admin
+  if (adminUser) {
+    return <Navigate to="/admin/dashboard" />;
+  }
+
+  return (
+    <Layout>
+      <div className="container py-12">
+        <div className="max-w-md mx-auto bg-white p-8 rounded-lg shadow-sm border">
+          <div className="text-center mb-6">
+            <h1 className="text-2xl font-bold">Admin Login</h1>
+            <p className="text-gray-600 mt-1">Sign in to your admin account</p>
+          </div>
+
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Username</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Admin Username" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input type="password" placeholder="••••••••" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? "Signing in..." : "Sign In"}
+              </Button>
+            </form>
+          </Form>
+        </div>
+      </div>
+    </Layout>
+  );
+};
+
+export default AdminLoginPage;

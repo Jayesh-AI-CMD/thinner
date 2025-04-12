@@ -97,11 +97,12 @@ const Footer = () => {
             <ul className="space-y-3">
               <li className="flex items-start">
                 <MapPin className="mr-3 h-5 w-5 text-gray-400 flex-shrink-0 mt-0.5" />
-                <span>123 Industrial Area, Phase 1, New Delhi, 110001, India</span>
+                <span>W228, Pimpleshwar Mandir Rd, Sagaon, Dombivli East, Dombivli, Maharashtra 421203, India</span>
               </li>
               <li className="flex items-center">
                 <Phone className="mr-3 h-5 w-5 text-gray-400" />
-                <span>+91 98765 43210</span>
+                <span>+91 8452006089</span>
+                <span>+91 8452006489</span>
               </li>
               <li className="flex items-center">
                 <Mail className="mr-3 h-5 w-5 text-gray-400" />
