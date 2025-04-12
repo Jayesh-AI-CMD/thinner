@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { ShoppingCart, Menu, User, X, Search, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,8 +11,22 @@ const Header = () => {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [showProductsMenu, setShowProductsMenu] = useState(false);
+  const productsMenuTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { cartItems, cartTotal } = useCart();
   const cartItemCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+
+  const handleMouseEnterProductsMenu = () => {
+    if (productsMenuTimeoutRef.current) {
+      clearTimeout(productsMenuTimeoutRef.current);
+    }
+    setShowProductsMenu(true);
+  };
+
+  const handleMouseLeaveProductsMenu = () => {
+    productsMenuTimeoutRef.current = setTimeout(() => {
+      setShowProductsMenu(false);
+    }, 200); // Delay of 200ms
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -36,10 +50,6 @@ const Header = () => {
     setShowSearchBar(!showSearchBar);
   };
 
-  const toggleProductsMenu = () => {
-    setShowProductsMenu(!showProductsMenu);
-  };
-
   return (
     <header
       className={`sticky top-0 w-full z-50 transition-all duration-300 ${
@@ -59,11 +69,11 @@ const Header = () => {
           </Link>
           <div
             className="relative"
-            onMouseEnter={() => setShowProductsMenu(true)}
-            onMouseLeave={() => setShowProductsMenu(false)}
+            onMouseEnter={handleMouseEnterProductsMenu}
+            onMouseLeave={handleMouseLeaveProductsMenu}
           >
             <button
-              onClick={toggleProductsMenu}
+              onClick={() => setShowProductsMenu(!showProductsMenu)}
               className="flex items-center text-gray-700 hover:text-brand-600 font-medium"
             >
               Products <ChevronDown className="ml-1 h-4 w-4" />
