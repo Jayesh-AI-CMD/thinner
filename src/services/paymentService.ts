@@ -78,7 +78,7 @@ export const verifyPaymentStatus = async (
     const { error: updateError } = await supabase
       .from("orders")
       .update({ 
-        status: "processing",
+        status: "processing" as const, // Type assertion to ensure it matches the expected literal type
       })
       .eq("id", orderId);
 
@@ -154,7 +154,7 @@ const fetchOrderById = async (orderId: string): Promise<Order | null> => {
       tax: data.tax,
       shipping: 0,
       total: data.total,
-      status: data.status,
+      status: data.status as Order["status"], // Type assertion to match OrderStatus
       paymentStatus: data.payment_id ? "paid" : "pending",
       paymentMethod: data.payment_method,
       shippingAddress,

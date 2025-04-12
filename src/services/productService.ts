@@ -1,6 +1,6 @@
 
 import { supabase } from "@/integrations/supabase/client";
-import { Product, ProductVariant } from "@/lib/types";
+import { Product, ProductVariant, ProductCategory } from "@/lib/types";
 
 // Fetch all products
 export const fetchProducts = async (): Promise<Product[]> => {
@@ -28,7 +28,7 @@ export const fetchProducts = async (): Promise<Product[]> => {
           name: product.name,
           slug: product.slug,
           description: product.description,
-          category: product.category,
+          category: product.category as ProductCategory, // Type assertion to ensure it matches ProductCategory
           features: product.features,
           variants: variants.map((variant) => ({
             id: variant.id,
@@ -79,7 +79,7 @@ export const fetchProductBySlug = async (slug: string): Promise<Product | null> 
       name: product.name,
       slug: product.slug,
       description: product.description,
-      category: product.category,
+      category: product.category as ProductCategory, // Type assertion here
       features: product.features,
       variants: variants.map((variant) => ({
         id: variant.id,
@@ -126,7 +126,7 @@ export const fetchProductById = async (id: string): Promise<Product | null> => {
       name: product.name,
       slug: product.slug,
       description: product.description,
-      category: product.category,
+      category: product.category as ProductCategory, // Type assertion here
       features: product.features,
       variants: variants.map((variant) => ({
         id: variant.id,
