@@ -15,7 +15,7 @@ const KeyBenefits = () => {
         <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
           <div className="w-full md:w-1/2">
             <img 
-              src="/benefits-image.jpg" 
+              src="public/benifit.png" 
               alt="Product Benefits" 
               className="rounded-lg shadow-lg w-full object-cover"
               style={{ maxHeight: "500px" }}
