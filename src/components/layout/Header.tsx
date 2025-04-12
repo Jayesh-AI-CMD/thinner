@@ -10,6 +10,7 @@ const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showSearchBar, setShowSearchBar] = useState(false);
+  const [showProductsMenu, setShowProductsMenu] = useState(false);
   const { cartItems, cartTotal } = useCart();
   const cartItemCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
@@ -35,6 +36,10 @@ const Header = () => {
     setShowSearchBar(!showSearchBar);
   };
 
+  const toggleProductsMenu = () => {
+    setShowProductsMenu(!showProductsMenu);
+  };
+
   return (
     <header
       className={`sticky top-0 w-full z-50 transition-all duration-300 ${
@@ -52,50 +57,59 @@ const Header = () => {
           <Link to="/" className="text-gray-700 hover:text-brand-600 font-medium">
             Home
           </Link>
-          <div className="relative group">
-            <button className="flex items-center text-gray-700 hover:text-brand-600 font-medium">
+          <div
+            className="relative"
+            onMouseEnter={() => setShowProductsMenu(true)}
+            onMouseLeave={() => setShowProductsMenu(false)}
+          >
+            <button
+              onClick={toggleProductsMenu}
+              className="flex items-center text-gray-700 hover:text-brand-600 font-medium"
+            >
               Products <ChevronDown className="ml-1 h-4 w-4" />
             </button>
-            <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md hidden group-hover:block">
-              <div className="p-2 space-y-1">
-                <Link
-                  to="/products"
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-brand-50 rounded-md"
-                >
-                  All Products
-                </Link>
-                <Link
-                  to="/products/royal-gp-thinner"
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-brand-50 rounded-md"
-                >
-                  Royal GP Thinner
-                </Link>
-                <Link
-                  to="/products/sailac-pu-thinner"
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-brand-50 rounded-md"
-                >
-                  Sailac PU Thinner
-                </Link>
-                <Link
-                  to="/products/top-999-nc-thinner"
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-brand-50 rounded-md"
-                >
-                  Top 999 NC Thinner
-                </Link>
-                <Link
-                  to="/products/royal-2000-nc-thinner"
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-brand-50 rounded-md"
-                >
-                  Royal 2000 NC Thinner
-                </Link>
-                <Link
-                  to="/products/top-2000-high-gloss-nc-thinner"
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-brand-50 rounded-md"
-                >
-                  Top 2000 High Gloss NC Thinner
-                </Link>
+            {showProductsMenu && (
+              <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md">
+                <div className="p-2 space-y-1">
+                  <Link
+                    to="/products"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-brand-50 rounded-md"
+                  >
+                    All Products
+                  </Link>
+                  <Link
+                    to="/products/royal-gp-thinner"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-brand-50 rounded-md"
+                  >
+                    Royal GP Thinner
+                  </Link>
+                  <Link
+                    to="/products/sailac-pu-thinner"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-brand-50 rounded-md"
+                  >
+                    Sailac PU Thinner
+                  </Link>
+                  <Link
+                    to="/products/top-999-nc-thinner"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-brand-50 rounded-md"
+                  >
+                    Top 999 NC Thinner
+                  </Link>
+                  <Link
+                    to="/products/royal-2000-nc-thinner"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-brand-50 rounded-md"
+                  >
+                    Royal 2000 NC Thinner
+                  </Link>
+                  <Link
+                    to="/products/top-2000-high-gloss-nc-thinner"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-brand-50 rounded-md"
+                  >
+                    Top 2000 High Gloss NC Thinner
+                  </Link>
+                </div>
               </div>
-            </div>
+            )}
           </div>
           <Link to="/about" className="text-gray-700 hover:text-brand-600 font-medium">
             About Us
