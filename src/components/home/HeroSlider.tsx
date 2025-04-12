@@ -16,7 +16,7 @@ const slides = [
   },
   {
     id: 2,
-    image: "/images/slider2-new.jpg",
+    image: "/public/1.jpg",
     title: "Royal GP Thinner",
     subtitle: "The Most Versatile General Purpose Thinner",
     cta: "View Details",
