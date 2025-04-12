@@ -1,26 +1,19 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { 
-  ShoppingCart, 
-  Menu,
-  User,
-  X,
-  Search,
-  ChevronDown 
-} from "lucide-react";
+import { ShoppingCart, Menu, User, X, Search, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/hooks/useCart";
 import MobileMenu from "./MobileMenu";
 import SearchBar from "../SearchBar";
-
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showSearchBar, setShowSearchBar] = useState(false);
-  const { cartItems, cartTotal } = useCart();
+  const {
+    cartItems,
+    cartTotal
+  } = useCart();
   const cartItemCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
-
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 50) {
@@ -34,25 +27,15 @@ const Header = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-
   const toggleMobileMenu = () => {
     setShowMobileMenu(!showMobileMenu);
   };
-
   const toggleSearchBar = () => {
     setShowSearchBar(!showSearchBar);
   };
-
-  return (
-    <header 
-      className={`sticky top-0 w-full z-50 transition-all duration-300 ${
-        isScrolled 
-          ? "bg-white shadow-md py-2" 
-          : "bg-white py-4"
-      }`}
-    >
+  return <header className={`sticky top-0 w-full z-50 transition-all duration-300 ${isScrolled ? "bg-white shadow-md py-2" : "bg-white py-4"}`}>
       <div className="container flex items-center justify-between">
-        <div className="flex items-center gap-2 lg:gap-10">
+        <div className="flex items-center gap-2 lg:gap-50">
           <Link to="/" className="flex items-center">
             <span className="text-xl font-bold text-brand-700">ThinnerMart</span>
           </Link>
@@ -98,20 +81,15 @@ const Header = () => {
         </div>
 
         <div className="flex items-center space-x-4">
-          <button 
-            onClick={toggleSearchBar}
-            className="text-gray-600 hover:text-brand-600"
-          >
+          <button onClick={toggleSearchBar} className="text-gray-600 hover:text-brand-600">
             <Search size={20} />
           </button>
 
           <Link to="/cart" className="relative">
             <ShoppingCart className="h-6 w-6 text-gray-600 hover:text-brand-600" />
-            {cartItemCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-brand-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+            {cartItemCount > 0 && <span className="absolute -top-2 -right-2 bg-brand-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
                 {cartItemCount}
-              </span>
-            )}
+              </span>}
           </Link>
 
           <div className="hidden md:block">
@@ -123,25 +101,17 @@ const Header = () => {
             </Link>
           </div>
 
-          <button
-            className="md:hidden text-gray-700"
-            onClick={toggleMobileMenu}
-            aria-label="Toggle menu"
-          >
+          <button className="md:hidden text-gray-700" onClick={toggleMobileMenu} aria-label="Toggle menu">
             {showMobileMenu ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
       </div>
 
-      {showSearchBar && (
-        <div className="absolute top-full left-0 w-full bg-white shadow-md p-4">
+      {showSearchBar && <div className="absolute top-full left-0 w-full bg-white shadow-md p-4">
           <SearchBar onClose={toggleSearchBar} />
-        </div>
-      )}
+        </div>}
 
       {showMobileMenu && <MobileMenu onClose={toggleMobileMenu} />}
-    </header>
-  );
+    </header>;
 };
-
 export default Header;
