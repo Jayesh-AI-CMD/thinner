@@ -3,6 +3,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 import { User, Session } from "@supabase/supabase-js";
 
+declare module "@supabase/supabase-js" {
+  export interface User {
+    name?: string;
+    phone?: string;
+  }
+}
+
 export interface AuthContextType {
   user: User | null;
   adminUser?: User | null; // Add adminUser if not already present
@@ -16,6 +23,15 @@ export interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const mapSupabaseUserToUser = (supabaseUser: User | null): User | null => {
+  if (!supabaseUser) return null;
+  return {
+    ...supabaseUser, // Spread all existing properties from the Supabase User type
+    name: supabaseUser.user_metadata?.name || "", // Map name from user_metadata
+    phone: supabaseUser.user_metadata?.phone || "", // Map phone from user_metadata
+  };
+};
+
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [adminUser, setAdminUser] = useState<User | null>(null); // Add adminUser state
@@ -28,7 +44,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, newSession) => {
         setSession(newSession);
-        setUser(newSession?.user ?? null);
+        setUser(mapSupabaseUserToUser(newSession?.user ?? null));
         setLoading(false);
       }
     );
@@ -36,7 +52,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     // Get the current session
     supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
       setSession(currentSession);
-      setUser(currentSession?.user ?? null);
+      setUser(mapSupabaseUserToUser(currentSession?.user ?? null));
       setLoading(false);
     });
 

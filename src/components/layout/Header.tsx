@@ -10,10 +10,7 @@ import SearchBar from "../SearchBar";
 const Header = () => {
   const { user } = useAuth();
 
-  if (!user) {
-    throw new Error("User does not exist");
-  }
-
+  // Gracefully handle the case where the user does not exist
   const [isScrolled, setIsScrolled] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showSearchBar, setShowSearchBar] = useState(false);
@@ -151,20 +148,24 @@ const Header = () => {
           </Link>
 
           <div className="hidden md:block">
-            <div className="flex items-center gap-2">
-              <Link to="/login">
-                <Button variant="outline" size="sm" className="flex items-center gap-2">
-                  <User size={16} />
-                  <span>Login</span>
-                </Button>
-              </Link>
-              <Link to="/register">
-                <Button variant="outline" size="sm" className="flex items-center gap-2">
-                  <User size={16} />
-                  <span>Sign Up</span>
-                </Button>
-              </Link>
-            </div>
+            {user ? (
+              <span className="text-gray-700">Welcome, {user.email || "User"}</span>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Link to="/login">
+                  <Button variant="outline" size="sm" className="flex items-center gap-2">
+                    <User size={16} />
+                    <span>Login</span>
+                  </Button>
+                </Link>
+                <Link to="/register">
+                  <Button variant="outline" size="sm" className="flex items-center gap-2">
+                    <User size={16} />
+                    <span>Sign Up</span>
+                  </Button>
+                </Link>
+              </div>
+            )}
           </div>
 
           <button
