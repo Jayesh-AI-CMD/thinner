@@ -34,7 +34,7 @@ const FeaturedBenefits = () => {
               className="flex flex-col items-center text-center p-4"
             >
               <benefit.icon className="h-10 w-10 text-brand-600 mb-2" />
-              <h3 className="text-base font-medium text-gray-900">{benefit.title}</h3>
+              <h3 className="text-base font-medium text-gray-900 hidden md:block">{benefit.title}</h3>
             </div>
           ))}
         </div>
