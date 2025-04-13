@@ -20,7 +20,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const handleAddSampleToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
+    // Allow adding multiple samples if needed
     addToCart(product.id, 1, undefined, true);
   };
 

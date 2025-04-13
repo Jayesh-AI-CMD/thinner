@@ -83,8 +83,8 @@ const ProductDetailPage = () => {
       return;
     }
 
-    const totalQuantity = quantity * 32; // Calculate total quantity based on units per box
-    addToCart(product.id, totalQuantity, selectedVariant.id);
+    // Use the exact quantity selected by the user
+    addToCart(product.id, quantity, selectedVariant.id);
   };
 
   const handleAddSampleToCart = () => {
