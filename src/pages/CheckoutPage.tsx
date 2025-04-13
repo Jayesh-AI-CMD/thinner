@@ -402,12 +402,27 @@ const CheckoutPage = () => {
 
                 {paymentMethod === "phonepe" && (
                   <div className="mt-4 space-y-2">
-                    <Label htmlFor="upiOrMobile">Enter UPI ID or Mobile Number</Label>
+                    <Label htmlFor="mobileNumber">Enter Mobile Number</Label>
                     <Input
-                      id="upiOrMobile"
-                      name="upiOrMobile"
+                      id="mobileNumber"
+                      name="mobileNumber"
                       type="text"
-                      placeholder="e.g., 9876543210 or user@upi"
+                      placeholder="e.g., 9876543210"
+                      required
+                    />
+
+                    <div className="flex items-center my-2">
+                      <Separator className="flex-1" />
+                      <span className="px-2 text-sm text-muted-foreground">OR</span>
+                      <Separator className="flex-1" />
+                    </div>
+
+                    <Label htmlFor="upiId">Enter UPI ID</Label>
+                    <Input
+                      id="upiId"
+                      name="upiId"
+                      type="text"
+                      placeholder="e.g., user@upi"
                       required
                     />
                   </div>
