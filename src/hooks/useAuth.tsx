@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
@@ -10,6 +9,7 @@ interface AuthContextType {
   signUp: (email: string, password: string, userData?: { name?: string, phone?: string }) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
+  signInAdmin: (username: string, password: string) => Promise<void>;
   loading: boolean;
 }
 
@@ -116,6 +116,33 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const signInAdmin = async (username: string, password: string) => {
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: username, // Assuming username is the admin's email
+        password,
+      });
+
+      if (error) throw error;
+
+      if (!data.user?.app_metadata?.roles?.includes("admin")) {
+        throw new Error("Unauthorized: Not an admin user");
+      }
+
+      toast({
+        title: "Welcome back, Admin!",
+        description: "You have successfully signed in.",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error signing in as admin",
+        description: error.message || "An unknown error occurred",
+        variant: "destructive",
+      });
+      throw error;
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -124,6 +151,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         signUp,
         signIn,
         signOut,
+        signInAdmin,
         loading,
       }}
     >
