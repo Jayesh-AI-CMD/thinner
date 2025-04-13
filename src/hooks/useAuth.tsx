@@ -3,11 +3,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 import { User, Session } from "@supabase/supabase-js";
 
-interface AuthContextType {
+export interface AuthContextType {
   user: User | null;
+  adminUser?: User | null; // Add adminUser if not already present
   session: Session | null;
   signUp: (email: string, password: string, userData?: { name?: string, phone?: string }) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
+  signInAdmin?: (username: string, password: string) => Promise<void>; // Add signInAdmin
   signOut: () => Promise<void>;
   loading: boolean;
 }
@@ -16,6 +18,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [adminUser, setAdminUser] = useState<User | null>(null); // Add adminUser state
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
@@ -114,11 +117,38 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const signInAdmin = async (username: string, password: string) => {
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: username, // Assuming admin username is an email
+        password,
+      });
+
+      if (error) {
+        toast({
+          title: "Admin login failed",
+          description: error.message || "An unknown error occurred",
+          variant: "destructive",
+        });
+        throw error;
+      }
+
+      setAdminUser(data.user ?? null); // Set adminUser state
+      toast({
+        title: "Admin login successful",
+        description: "You have successfully signed in as an admin.",
+      });
+    } catch (error: any) {
+      console.error("Admin sign-in error:", error);
+    }
+  };
+
   const signOut = async () => {
     try {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
       
+      setAdminUser(null); // Clear adminUser state on sign out
       toast({
         title: "Signed out successfully",
       });
@@ -135,9 +165,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     <AuthContext.Provider
       value={{
         user,
+        adminUser, // Add adminUser to context value
         session,
         signUp,
         signIn,
+        signInAdmin, // Add signInAdmin to context value
         signOut,
         loading,
       }}
