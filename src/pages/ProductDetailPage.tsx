@@ -19,9 +19,25 @@ import { MobileStickyBenefits } from "@/components/home/FeaturedBenefits";
 import ProductCard from "@/components/product/ProductCard";
 import { products } from "@/lib/product-data";
 
+const productVariants = [
+  { id: '400ml', size: '400 ML', image: '/400ml.png', price: 100, stock: 10 },
+  { id: '500ml', size: '500 ML', image: '/500ml.png', price: 150, stock: 15 },
+  { id: '800ml', size: '800 ML', image: '/800ml.png', price: 200, stock: 20 },
+  { id: '1600ml', size: '1600 ML', image: '/1600ml.png', price: 300, stock: 25 },
+  { id: '1l', size: '1L', image: '/1l.png', price: 400, stock: 30 },
+  { id: '2l', size: '2L', image: '/2l.png', price: 500, stock: 35 },
+  { id: '4l', size: '4L', image: '/4l.png', price: 600, stock: 40 },
+  { id: '5l', size: '5L', image: '/5-LTR.png', price: 700, stock: 45 },
+  { id: '8l', size: '8L', image: '/8l.png', price: 800, stock: 50 },
+  { id: '10l', size: '10L', image: '/10l.png', price: 900, stock: 55 },
+];
+
 const ProductDetailPage = () => {
   const { slug } = useParams<{ slug: string }>();
-  const product = getProductBySlug(slug || "");
+  const product = {
+    ...getProductBySlug(slug || ""),
+    variants: productVariants,
+  };
   const { addToCart } = useCart();
   
   const [selectedVariant, setSelectedVariant] = useState(product?.variants[0] || null);
@@ -104,7 +120,7 @@ const ProductDetailPage = () => {
                   >
                     <div className="aspect-square">
                       <img 
-                        src={variant.id === 'royal-gp-thinner' ? '/5-LTR.png' : variant.image} 
+                        src={variant.image} 
                         alt={`${product.name} ${variant.size}`}
                         className="w-full h-full object-contain"
                       />
