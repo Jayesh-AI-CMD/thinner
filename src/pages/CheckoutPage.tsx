@@ -427,7 +427,6 @@ const CheckoutPage = () => {
                       name="upiId"
                       type="text"
                       placeholder="e.g., user@upi"
-                      required={!((document.getElementById('mobileNumber') as HTMLInputElement)?.value)}
                     />
                   </div>
                 )}
