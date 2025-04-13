@@ -48,6 +48,8 @@ const CheckoutPage = () => {
 
   // Update the total calculation to include coupon discount
   const adjustedCartTotal = cartTotal;
+
+  console.log("Cart Items in CheckoutPage:", cartItems);
   
   const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
