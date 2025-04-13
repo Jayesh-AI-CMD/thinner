@@ -77,24 +77,40 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signIn = async (email: string, password: string) => {
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      if (error) throw error;
+      if (error) {
+        if (error.message.includes("Invalid login credentials")) {
+          toast({
+            title: "Login failed",
+            description: "The email or password you entered is incorrect.",
+            variant: "destructive",
+          });
+        } else if (error.message.includes("User not found")) {
+          toast({
+            title: "User not found",
+            description: "No account exists with the provided email address.",
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Error signing in",
+            description: error.message || "An unknown error occurred",
+            variant: "destructive",
+          });
+        }
+        throw error;
+      }
 
       toast({
         title: "Welcome back!",
         description: "You have successfully signed in.",
       });
     } catch (error: any) {
-      toast({
-        title: "Error signing in",
-        description: error.message || "An unknown error occurred",
-        variant: "destructive",
-      });
-      throw error;
+      console.error("Sign-in error:", error);
     }
   };
 
