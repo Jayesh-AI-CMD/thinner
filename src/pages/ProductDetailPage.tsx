@@ -85,11 +85,11 @@ const ProductDetailPage = () => {
             {/* Product Images */}
             <div>
               <div className="bg-white rounded-lg overflow-hidden border border-gray-200 mb-4">
-                <img 
-                  src={selectedVariant ? selectedVariant.image : product.mainImage} 
-                  alt={product.name}
-                  className="w-full object-contain aspect-square"
-                />
+              <img 
+                src="/5-LTR.png" 
+                alt={product.name}
+                className="w-full object-contain aspect-square"
+              />
               </div>
               <div className="grid grid-cols-5 gap-2">
                 {product.variants.map((variant) => (
