@@ -361,24 +361,24 @@ const CheckoutPage = () => {
               <div className="divide-y">
               {cartItems.map((item, index) => (
                 <div key={index} className="py-4 flex justify-between">
-                <div className="flex items-start">
-                  <div className="w-16 h-16 rounded overflow-hidden mr-4">
-                  <img
-                    src={item.image || "/placeholder.svg"}
-                    alt={item.name}
-                    className="w-full h-full object-cover"
-                  />
+                  <div className="flex items-start">
+                    <div className="w-16 h-16 rounded overflow-hidden mr-4">
+                      <img
+                        src={item.image || "/placeholder.svg"}
+                        alt={item.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div>
+                      <p className="font-medium">{item.name}</p>
+                      <p className="text-sm text-gray-500">
+                        {item.size && `Size: ${item.size}`}
+                        {item.isSample && " (Sample)"}
+                      </p>
+                      <p className="text-sm">Qty: {item.quantity}</p>
+                    </div>
                   </div>
-                  <div>
-                  <p className="font-medium">{item.name}</p>
-                  <p className="text-sm text-gray-500">
-                    {item.size && `Size: ${item.size}`}
-                    {item.isSample && " (Sample)"}
-                  </p>
-                  <p className="text-sm">Qty: {item.quantity}</p>
-                  </div>
-                </div>
-                <p className="font-medium">₹{(item.price / 100).toLocaleString()}</p>
+                  <p className="font-medium">₹{((item.price * item.quantity) / 100).toLocaleString()}</p>
                 </div>
               ))}
               </div>
