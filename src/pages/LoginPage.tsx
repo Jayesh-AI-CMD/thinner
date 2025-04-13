@@ -27,7 +27,7 @@ const adminLoginSchema = z.object({
   password: z.string().min(6, { message: "Password must be at least 6 characters" }),
 });
 
-const LoginPage = () => {
+function LoginPage() {
   const { signIn, user } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -79,8 +79,7 @@ const LoginPage = () => {
                     </FormControl>
                     <FormMessage />
                   </FormItem>
-                )}
-              />
+                )} />
 
               <FormField
                 control={form.control}
@@ -93,8 +92,7 @@ const LoginPage = () => {
                     </FormControl>
                     <FormMessage />
                   </FormItem>
-                )}
-              />
+                )} />
 
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? "Signing in..." : "Sign In"}
@@ -114,7 +112,7 @@ const LoginPage = () => {
       </div>
     </Layout>
   );
-};
+}
 
 const AdminLoginPage = () => {
   const { signInAdmin, adminUser } = useAuth();
