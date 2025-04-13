@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useCart } from "@/hooks/useCart";
@@ -105,7 +104,7 @@ const ProductDetailPage = () => {
                   >
                     <div className="aspect-square">
                       <img 
-                        src={variant.image} 
+                        src={variant.id === 'royal-gp-thinner' ? '/public/5-LTR.png' : variant.image} 
                         alt={`${product.name} ${variant.size}`}
                         className="w-full h-full object-contain"
                       />
