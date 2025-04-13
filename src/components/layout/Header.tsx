@@ -3,10 +3,17 @@ import { Link } from "react-router-dom";
 import { ShoppingCart, Menu, User, X, Search, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/hooks/useCart";
+import { useAuth } from "@/hooks/useAuth";
 import MobileMenu from "./MobileMenu";
 import SearchBar from "../SearchBar";
 
 const Header = () => {
+  const { user } = useAuth();
+
+  if (!user) {
+    throw new Error("User does not exist");
+  }
+
   const [isScrolled, setIsScrolled] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showSearchBar, setShowSearchBar] = useState(false);
