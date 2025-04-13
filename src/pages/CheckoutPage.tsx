@@ -17,7 +17,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Address, GSTDetails } from "@/lib/types";
 
 const CheckoutPage = () => {
-  const { cartItems, cartTotal, cartSubtotal, cartTax, clearCart } = useCart();
+  const { cartItems, cartTotal, cartSubtotal, cartTax, clearCart, couponDiscount } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -43,6 +43,9 @@ const CheckoutPage = () => {
   });
   
   const [sameAsShipping, setSameAsShipping] = useState(true);
+
+  // Update the total calculation to include coupon discount
+  const adjustedCartTotal = cartTotal - couponDiscount;
   
   const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -89,7 +92,7 @@ const CheckoutPage = () => {
         cartItems,
         cartSubtotal,
         cartTax,
-        cartTotal,
+        adjustedCartTotal,
         shippingAddress,
         paymentMethod,
         useGST ? gstDetails : undefined
@@ -97,7 +100,7 @@ const CheckoutPage = () => {
       
       // Process the payment based on the selected method
       if (paymentMethod === "phonepe") {
-        const paymentResponse = await initiatePhonePePayment(order.id, cartTotal / 100); // Convert to rupees
+        const paymentResponse = await initiatePhonePePayment(order.id, adjustedCartTotal / 100); // Convert to rupees
         
         if (!paymentResponse.success) {
           throw new Error(paymentResponse.error || "Payment failed");
@@ -379,9 +382,13 @@ const CheckoutPage = () => {
                   <span>GST (18%)</span>
                   <span>₹{(cartTax / 100).toLocaleString()}</span>
                 </div>
+                <div className="flex justify-between">
+                  <span>Coupon Discount</span>
+                  <span>-₹{(couponDiscount / 100).toLocaleString()}</span>
+                </div>
                 <div className="flex justify-between text-lg font-bold mt-2">
                   <span>Total</span>
-                  <span>₹{(cartTotal / 100).toLocaleString()}</span>
+                  <span>₹{(adjustedCartTotal / 100).toLocaleString()}</span>
                 </div>
               </div>
             </div>
@@ -458,7 +465,7 @@ const CheckoutPage = () => {
                       Processing...
                     </span>
                   ) : (
-                    `Place Order • ₹${(cartTotal / 100).toLocaleString()}`
+                    `Place Order • ₹${(adjustedCartTotal / 100).toLocaleString()}`
                   )}
                 </Button>
               </div>

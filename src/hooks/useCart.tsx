@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { CartItem } from "@/lib/types";
 import { getProductById, getVariantById } from "@/lib/product-data";
@@ -13,6 +12,7 @@ interface CartContextType {
   cartTotal: number;
   cartSubtotal: number;
   cartTax: number;
+  couponDiscount: number;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -22,6 +22,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cartSubtotal, setCartSubtotal] = useState(0);
   const [cartTax, setCartTax] = useState(0);
   const [cartTotal, setCartTotal] = useState(0);
+  const [couponDiscount, setCouponDiscount] = useState(0);
 
   // Load cart from localStorage on component mount
   useEffect(() => {
@@ -46,10 +47,12 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     // Calculate cart totals
     const subtotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
     const tax = subtotal * 0.18; // 18% GST
-    const totalAmount = subtotal + tax;
+    const discount = subtotal * 0.1; // Example: 10% discount for demonstration
+    const totalAmount = subtotal + tax - discount;
 
     setCartSubtotal(subtotal);
     setCartTax(tax);
+    setCouponDiscount(discount);
     setCartTotal(totalAmount);
   }, [cartItems]);
 
@@ -154,7 +157,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       clearCart,
       cartTotal,
       cartSubtotal,
-      cartTax
+      cartTax,
+      couponDiscount
     }}>
       {children}
     </CartContext.Provider>
