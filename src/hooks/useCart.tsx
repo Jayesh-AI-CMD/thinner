@@ -96,26 +96,9 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     }
 
     setCartItems(prevItems => {
-      // Check if item already exists in cart
-      const existingItemIndex = prevItems.findIndex(item => {
-        if (isSample) {
-          return item.productId === productId && item.isSample === true;
-        } else {
-          return item.productId === productId && item.variantId === variantId;
-        }
-      });
-
-      if (existingItemIndex !== -1) {
-        // Item exists, update quantity
-        const updatedItems = [...prevItems];
-        updatedItems[existingItemIndex].quantity += quantity;
-        toast.success("Cart updated successfully");
-        return updatedItems;
-      } else {
-        // Item doesn't exist, add new item
-        toast.success("Product added to cart");
-        return [...prevItems, itemToAdd];
-      }
+      // Always add a new item to the cart, even if it has the same productId and variantId
+      toast.success("Product added to cart");
+      return [...prevItems, itemToAdd];
     });
   };
 
