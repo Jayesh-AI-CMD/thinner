@@ -412,7 +412,7 @@ const CheckoutPage = () => {
                       name="mobileNumber"
                       type="text"
                       placeholder="e.g., 9876543210"
-                      required
+                      required={!((document.getElementById('upiId') as HTMLInputElement)?.value)}
                     />
 
                     <div className="flex items-center my-2">
@@ -427,7 +427,7 @@ const CheckoutPage = () => {
                       name="upiId"
                       type="text"
                       placeholder="e.g., user@upi"
-                      required
+                      required={!((document.getElementById('mobileNumber') as HTMLInputElement)?.value)}
                     />
                   </div>
                 )}
