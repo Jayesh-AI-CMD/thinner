@@ -1,7 +1,8 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, useState, ReactNode } from "react";
 import { CartItem } from "@/lib/types";
 import { getProductById, getVariantById } from "@/lib/product-data";
 import { toast } from "sonner";
+import { useCartPersistence } from "./useCartPersistence";
 
 interface CartContextType {
   cartItems: CartItem[];
@@ -22,35 +23,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cartTax, setCartTax] = useState(0);
   const [cartTotal, setCartTotal] = useState(0);
 
-  // Load cart from localStorage on component mount
-  useEffect(() => {
-    const savedCart = localStorage.getItem("cart");
-    if (savedCart) {
-      try {
-        setCartItems(JSON.parse(savedCart));
-      } catch (error) {
-        console.error("Failed to parse cart from localStorage", error);
-      }
-    }
-  }, []);
-
-  // Save cart to localStorage whenever it changes
-  useEffect(() => {
-    if (cartItems.length > 0) {
-      localStorage.setItem("cart", JSON.stringify(cartItems));
-    } else {
-      localStorage.removeItem("cart");
-    }
-
-    // Calculate cart totals
-    const subtotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
-    const tax = subtotal * 0.18; // 18% GST
-    const totalAmount = subtotal + tax; // Exclude discount
-
-    setCartSubtotal(subtotal);
-    setCartTax(tax);
-    setCartTotal(totalAmount);
-  }, [cartItems]);
+  useCartPersistence(cartItems, setCartItems, setCartSubtotal, setCartTax, setCartTotal);
 
   const addToCart = (productId: string, quantity: number, variantId?: string, isSample: boolean = false) => {
     const product = getProductById(productId);
