@@ -127,9 +127,6 @@ const Header = () => {
           <Link to="/contact" className="text-gray-700 hover:text-brand-600 font-medium">
             Contact
           </Link>
-          <Link to="/login" className="text-gray-700 hover:text-brand-600 font-medium">
-            Login
-          </Link>
         </nav>
 
         <div className="flex items-center space-x-4">
@@ -147,12 +144,20 @@ const Header = () => {
           </Link>
 
           <div className="hidden md:block">
-            <Link to="/register">
-              <Button variant="outline" size="sm" className="flex items-center gap-2">
-                <User size={16} />
-                <span>Sign Up</span>
-              </Button>
-            </Link>
+            <div className="flex items-center gap-2">
+              <Link to="/login">
+                <Button variant="outline" size="sm" className="flex items-center gap-2">
+                  <User size={16} />
+                  <span>Login</span>
+                </Button>
+              </Link>
+              <Link to="/register">
+                <Button variant="outline" size="sm" className="flex items-center gap-2">
+                  <User size={16} />
+                  <span>Sign Up</span>
+                </Button>
+              </Link>
+            </div>
           </div>
 
           <button
