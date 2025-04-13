@@ -399,7 +399,20 @@ const CheckoutPage = () => {
                     </div>
                   </Label>
                 </div>
-                
+
+                {paymentMethod === "phonepe" && (
+                  <div className="mt-4 space-y-2">
+                    <Label htmlFor="upiOrMobile">Enter UPI ID or Mobile Number</Label>
+                    <Input
+                      id="upiOrMobile"
+                      name="upiOrMobile"
+                      type="text"
+                      placeholder="e.g., 9876543210 or user@upi"
+                      required
+                    />
+                  </div>
+                )}
+
                 <div className="flex items-center space-x-3 rounded-md border p-4">
                   <RadioGroupItem value="bank_transfer" id="bank_transfer" />
                   <Label htmlFor="bank_transfer" className="flex-1 cursor-pointer">
