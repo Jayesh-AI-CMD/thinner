@@ -62,10 +62,18 @@ const ProductDetailPage = () => {
   }
 
   const handleAddToCart = () => {
-    if (selectedVariant) {
-      const totalQuantity = quantity * 32; // Calculate total quantity based on units per box
-      addToCart(product.id, totalQuantity, selectedVariant.id);
+    if (!selectedVariant) {
+      alert("Please select a valid variant before adding to the cart.");
+      return;
     }
+
+    if (selectedVariant.stock <= 0) {
+      alert("The selected variant is out of stock.");
+      return;
+    }
+
+    const totalQuantity = quantity * 32; // Calculate total quantity based on units per box
+    addToCart(product.id, totalQuantity, selectedVariant.id);
   };
 
   const handleAddSampleToCart = () => {
