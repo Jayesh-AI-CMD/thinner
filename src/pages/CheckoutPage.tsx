@@ -425,6 +425,29 @@ const CheckoutPage = () => {
                       placeholder="e.g., user@upi"
                       required
                     />
+
+                    <Button
+                      type="button"
+                      onClick={async () => {
+                        try {
+                          const paymentResponse = await initiatePhonePePayment("order-id-placeholder", cartTotal / 100); // Replace with actual order ID and amount
+                          if (paymentResponse.success) {
+                            window.location.href = paymentResponse.paymentUrl;
+                          } else {
+                            throw new Error(paymentResponse.error || "Failed to initiate payment");
+                          }
+                        } catch (error) {
+                          console.error("Payment initiation error:", error);
+                          toast({
+                            variant: "destructive",
+                            title: "Payment Error",
+                            description: error.message || "An error occurred while initiating payment.",
+                          });
+                        }
+                      }}
+                    >
+                      Proceed to Pay
+                    </Button>
                   </div>
                 )}
 
