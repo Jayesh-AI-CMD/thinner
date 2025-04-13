@@ -189,7 +189,7 @@ const ProductDetailPage = () => {
                     +
                   </button>
                   <span className="ml-3 text-sm text-gray-500">
-                    Max 10 boxes per order
+                    Units per box : 32
                   </span>
                 </div>
               </div>
