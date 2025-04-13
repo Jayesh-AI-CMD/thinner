@@ -104,7 +104,7 @@ const ProductDetailPage = () => {
                   >
                     <div className="aspect-square">
                       <img 
-                        src={variant.id === 'royal-gp-thinner' ? '/public/5-LTR.png' : variant.image} 
+                        src={variant.id === 'royal-gp-thinner' ? '/5-LTR.png' : variant.image} 
                         alt={`${product.name} ${variant.size}`}
                         className="w-full h-full object-contain"
                       />
