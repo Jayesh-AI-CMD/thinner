@@ -16,17 +16,7 @@ import { CreditCard, Truck, AlertCircle } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { Address, CartItem, GSTDetails } from "@/lib/types";
 
-interface CartContextType {
-  cartItems: CartItem[];
-  addToCart: (productId: string, quantity: number, variantId?: string, isSample?: boolean) => void;
-  removeFromCart: (itemIndex: number) => void;
-  updateQuantity: (itemIndex: number, quantity: number) => void;
-  clearCart: () => void;
-  cartTotal: number;
-  cartSubtotal: number;
-  cartTax: number;
-  couponDiscount: number;
-}
+// Removed unused CartContextType interface
 
 const CheckoutPage = () => {
   const { cartItems, cartTotal, cartSubtotal, cartTax, clearCart, } = useCart();
@@ -65,10 +55,10 @@ const CheckoutPage = () => {
     
     // Update GST address if same as shipping
     if (sameAsShipping) {
-      setGstDetails((prev) => ({
-        ...prev,
-        address: { ...prev.address, [name]: value },
-      }));
+  setGstDetails((prev) => ({
+    ...prev,
+    address: { ...shippingAddress },
+  }));
     }
   };
   
