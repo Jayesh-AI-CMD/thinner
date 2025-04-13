@@ -359,49 +359,49 @@ const CheckoutPage = () => {
               <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
               
               <div className="divide-y">
-                {cartItems.map((item, index) => (
-                  <div key={index} className="py-4 flex justify-between">
-                    <div className="flex items-start">
-                      <div className="w-16 h-16 rounded overflow-hidden mr-4">
-                        <img
-                          src={item.image || "/placeholder.svg"}
-                          alt={item.name}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      <div>
-                        <p className="font-medium">{item.name}</p>
-                        <p className="text-sm text-gray-500">
-                          {item.size && `Size: ${item.size}`}
-                          {item.isSample && " (Sample)"}
-                        </p>
-                        <p className="text-sm">Qty: {item.quantity}</p>
-                      </div>
-                    </div>
-                    <p className="font-medium">₹{((item.price * item.quantity) / 100).toLocaleString()}</p>
+              {cartItems.map((item, index) => (
+                <div key={index} className="py-4 flex justify-between">
+                <div className="flex items-start">
+                  <div className="w-16 h-16 rounded overflow-hidden mr-4">
+                  <img
+                    src={item.image || "/placeholder.svg"}
+                    alt={item.name}
+                    className="w-full h-full object-cover"
+                  />
                   </div>
-                ))}
+                  <div>
+                  <p className="font-medium">{item.name}</p>
+                  <p className="text-sm text-gray-500">
+                    {item.size && `Size: ${item.size}`}
+                    {item.isSample && " (Sample)"}
+                  </p>
+                  <p className="text-sm">Qty: {item.quantity}</p>
+                  </div>
+                </div>
+                <p className="font-medium">₹{(item.price / 100).toLocaleString()}</p>
+                </div>
+              ))}
               </div>
               
               <Separator className="my-4" />
               
               <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span>Subtotal ({cartItems.length} items)</span>
-                  <span>₹{(cartSubtotal / 100).toLocaleString()}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>GST (18%)</span>
-                  <span>₹{(cartTax / 100).toLocaleString()}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Coupon Discount</span>
-                  {/* <span>-₹{(couponDiscount / 100).toLocaleString()}</span> */}
-                </div>
-                <div className="flex justify-between text-lg font-bold mt-2">
-                  <span>Total</span>
-                  <span>₹{(adjustedCartTotal / 100).toLocaleString()}</span>
-                </div>
+              <div className="flex justify-between">
+                <span>Subtotal ({cartItems.length} items)</span>
+                <span>₹{(cartSubtotal / 100).toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>GST (18%)</span>
+                <span>₹{(cartTax / 100).toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Coupon Discount</span>
+                <span>-₹{(cartTotal - adjustedCartTotal) / 100}</span>
+              </div>
+              <div className="flex justify-between text-lg font-bold mt-2">
+                <span>Total</span>
+                <span>₹{(adjustedCartTotal / 100).toLocaleString()}</span>
+              </div>
               </div>
             </div>
             
