@@ -40,7 +40,7 @@ const ProductDetailPage = () => {
   };
   const { addToCart } = useCart();
   
-  const [selectedVariant, setSelectedVariant] = useState(product?.variants[0] || null);
+  const [selectedVariant, setSelectedVariant] = useState(product?.variants[0] || productVariants[0]);
   const [quantity, setQuantity] = useState(1);
 
   const relatedProducts = products
