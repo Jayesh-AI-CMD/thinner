@@ -1,4 +1,3 @@
-
 import { TruckIcon, ShieldCheck, CreditCard, RefreshCcw, BadgeCheck } from "lucide-react";
 
 const benefits = [
@@ -34,7 +33,7 @@ const FeaturedBenefits = () => {
   return (
     <div className="bg-gray-50 py-12">
       <div className="container">
-        <div className="hidden md:grid grid-cols-5 gap-4">
+        <div className="hidden md:flex justify-center items-center gap-4">
           {benefits.map((benefit) => (
             <div 
               key={benefit.id}
@@ -48,12 +47,12 @@ const FeaturedBenefits = () => {
         </div>
 
         {/* Mobile scrollable version */}
-        <div className="md:hidden overflow-x-auto pb-4 -mx-4">
-          <div className="flex px-4 space-x-4 min-w-max">
+        <div className="md:hidden flex justify-center items-center overflow-x-auto pb-4 -mx-4">
+          <div className="flex px-4 space-x-4">
             {benefits.map((benefit) => (
               <div 
                 key={benefit.id}
-                className="flex flex-col items-center text-center p-3 bg-white rounded-lg shadow-sm min-w-[150px]"
+                className="flex flex-col items-center text-center p-3 bg-white rounded-lg shadow-sm"
               >
                 <benefit.icon className="h-8 w-8 text-brand-600 mb-2" />
                 <h3 className="text-sm font-medium text-gray-900 mb-1">{benefit.title}</h3>
