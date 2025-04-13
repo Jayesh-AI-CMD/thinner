@@ -34,20 +34,23 @@ const productVariants = [
 
 const ProductDetailPage = () => {
   const { slug } = useParams<{ slug: string }>();
-  const product = {
-    ...getProductBySlug(slug || ""),
-    variants: productVariants,
-  };
-  const { addToCart } = useCart();
-  
-  const [selectedVariant, setSelectedVariant] = useState(product?.variants[0] || productVariants[0]);
-  const [quantity, setQuantity] = useState(1);
+  if (!slug) {
+    return (
+      <Layout>
+        <div className="container py-12 text-center">
+          <h1 className="text-2xl font-bold mb-4">Invalid Product</h1>
+          <p className="mb-6">The product you're looking for doesn't exist or the URL is incorrect.</p>
+          <Link to="/products">
+            <Button>Browse Products</Button>
+          </Link>
+        </div>
+      </Layout>
+    );
+  }
 
-  const relatedProducts = products
-    .filter(p => p.id !== product?.id)
-    .slice(0, 4);
+  const product = getProductBySlug(slug);
 
-  if (!product) {
+  if (!product || !product.variants || product.variants.length === 0) {
     return (
       <Layout>
         <div className="container py-12 text-center">
@@ -60,6 +63,14 @@ const ProductDetailPage = () => {
       </Layout>
     );
   }
+
+  const { addToCart } = useCart();
+  const [selectedVariant, setSelectedVariant] = useState(product.variants[0]);
+  const [quantity, setQuantity] = useState(1);
+
+  const relatedProducts = products
+    .filter(p => p.id !== product?.id)
+    .slice(0, 4);
 
   const handleAddToCart = () => {
     if (!selectedVariant) {
