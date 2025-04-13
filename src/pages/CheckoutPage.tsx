@@ -19,11 +19,11 @@ import { Address, CartItem, GSTDetails } from "@/lib/types";
 // Removed unused CartContextType interface
 
 const CheckoutPage = () => {
-  const { cartItems, cartTotal, cartSubtotal, cartTax, clearCart, } = useCart();
+  const { cartItems, cartTotal, cartSubtotal, cartTax, clearCart } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
-  
+
   const [loading, setLoading] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("phonepe");
   const [shippingAddress, setShippingAddress] = useState<Address>({
@@ -36,34 +36,31 @@ const CheckoutPage = () => {
     postalCode: "",
     country: "India",
   });
-  
+
   const [useGST, setUseGST] = useState(false);
   const [gstDetails, setGstDetails] = useState<GSTDetails>({
     gstNumber: "",
     businessName: "",
     address: { ...shippingAddress },
   });
-  
+
   const [sameAsShipping, setSameAsShipping] = useState(true);
 
-  // Update the total calculation to include coupon discount
-  const adjustedCartTotal = cartTotal;
-
   console.log("Cart Items in CheckoutPage:", cartItems);
-  
+
   const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setShippingAddress((prev) => ({ ...prev, [name]: value }));
-    
+
     // Update GST address if same as shipping
     if (sameAsShipping) {
-  setGstDetails((prev) => ({
-    ...prev,
-    address: { ...shippingAddress },
-  }));
+      setGstDetails((prev) => ({
+        ...prev,
+        address: { ...shippingAddress },
+      }));
     }
   };
-  
+
   const handleGSTDetailsChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     if (name === "gstNumber" || name === "businessName") {
@@ -75,10 +72,10 @@ const CheckoutPage = () => {
       }));
     }
   };
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (cartItems.length === 0) {
       toast({
         variant: "destructive",
@@ -87,32 +84,32 @@ const CheckoutPage = () => {
       });
       return;
     }
-    
+
     setLoading(true);
-    
+
     try {
       // Create the order first
       const order = await createOrder(
         cartItems,
         cartSubtotal,
         cartTax,
-        adjustedCartTotal,
+        cartTotal,
         shippingAddress,
         paymentMethod,
         useGST ? gstDetails : undefined
       );
-      
+
       // Process the payment based on the selected method
       if (paymentMethod === "phonepe") {
-        const paymentResponse = await initiatePhonePePayment(order.id, adjustedCartTotal / 100); // Convert to rupees
-        
+        const paymentResponse = await initiatePhonePePayment(order.id, cartTotal / 100); // Convert to rupees
+
         if (!paymentResponse.success) {
           throw new Error(paymentResponse.error || "Payment failed");
         }
-        
+
         // Clear the cart
         clearCart();
-        
+
         // Redirect to PhonePe payment page
         window.location.href = paymentResponse.paymentUrl as string;
       } else if (paymentMethod === "bank_transfer") {
@@ -130,7 +127,7 @@ const CheckoutPage = () => {
       setLoading(false);
     }
   };
-  
+
   if (cartItems.length === 0) {
     return (
       <Layout>
@@ -143,18 +140,18 @@ const CheckoutPage = () => {
       </Layout>
     );
   }
-  
+
   return (
     <Layout>
       <div className="container mx-auto px-4 py-8 md:py-12">
         <h1 className="text-2xl md:text-3xl font-bold mb-8 text-center">Checkout</h1>
-        
+
         <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-8">
           {/* Left Column - Customer Information */}
           <div className="space-y-8">
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <h2 className="text-xl font-semibold mb-4">Shipping Information</h2>
-              
+
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
@@ -167,7 +164,7 @@ const CheckoutPage = () => {
                       required
                     />
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="phone">Phone Number</Label>
                     <Input 
@@ -179,7 +176,7 @@ const CheckoutPage = () => {
                     />
                   </div>
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="email">Email Address</Label>
                   <Input 
@@ -191,7 +188,7 @@ const CheckoutPage = () => {
                     required
                   />
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="street">Address</Label>
                   <Textarea 
@@ -202,7 +199,7 @@ const CheckoutPage = () => {
                     required
                   />
                 </div>
-                
+
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="city">City</Label>
@@ -214,7 +211,7 @@ const CheckoutPage = () => {
                       required
                     />
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="state">State</Label>
                     <Input 
@@ -226,7 +223,7 @@ const CheckoutPage = () => {
                     />
                   </div>
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="postalCode">Postal Code</Label>
                   <Input 
@@ -239,7 +236,7 @@ const CheckoutPage = () => {
                 </div>
               </div>
             </div>
-            
+
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-semibold">GST Details (Optional)</h2>
@@ -252,7 +249,7 @@ const CheckoutPage = () => {
                   <Label htmlFor="use-gst">Enable GST Invoice</Label>
                 </div>
               </div>
-              
+
               {useGST && (
                 <div className="space-y-4 mt-4">
                   <div className="space-y-2">
@@ -265,7 +262,7 @@ const CheckoutPage = () => {
                       required={useGST}
                     />
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="businessName">Business Name</Label>
                     <Input 
@@ -276,7 +273,7 @@ const CheckoutPage = () => {
                       required={useGST}
                     />
                   </div>
-                  
+
                   <div className="flex items-center space-x-2 mb-2">
                     <Switch
                       id="same-as-shipping"
@@ -290,7 +287,7 @@ const CheckoutPage = () => {
                     />
                     <Label htmlFor="same-as-shipping">Same as shipping address</Label>
                   </div>
-                  
+
                   {!sameAsShipping && (
                     <div className="space-y-4">
                       <div className="space-y-2">
@@ -303,7 +300,7 @@ const CheckoutPage = () => {
                           required={useGST && !sameAsShipping}
                         />
                       </div>
-                      
+
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
                           <Label htmlFor="gst_city">City</Label>
@@ -315,7 +312,7 @@ const CheckoutPage = () => {
                             required={useGST && !sameAsShipping}
                           />
                         </div>
-                        
+
                         <div className="space-y-2">
                           <Label htmlFor="gst_state">State</Label>
                           <Input 
@@ -327,7 +324,7 @@ const CheckoutPage = () => {
                           />
                         </div>
                       </div>
-                      
+
                       <div className="space-y-2">
                         <Label htmlFor="gst_postalCode">Postal Code</Label>
                         <Input 
@@ -344,62 +341,58 @@ const CheckoutPage = () => {
               )}
             </div>
           </div>
-          
+
           {/* Right Column - Order Summary and Payment */}
           <div className="space-y-8">
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
-              
+
               <div className="divide-y">
-              {cartItems.map((item, index) => (
-                <div key={index} className="py-4 flex justify-between">
-                  <div className="flex items-start">
-                    <div className="w-16 h-16 rounded overflow-hidden mr-4">
-                      <img
-                        src={item.image || "/placeholder.svg"}
-                        alt={item.name}
-                        className="w-full h-full object-cover"
-                      />
+                {cartItems.map((item, index) => (
+                  <div key={index} className="py-4 flex justify-between">
+                    <div className="flex items-start">
+                      <div className="w-16 h-16 rounded overflow-hidden mr-4">
+                        <img
+                          src={item.image || "/placeholder.svg"}
+                          alt={item.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div>
+                        <p className="font-medium">{item.name}</p>
+                        <p className="text-sm text-gray-500">
+                          {item.size && `Size: ${item.size}`}
+                          {item.isSample && " (Sample)"}
+                        </p>
+                        <p className="text-sm">Qty: {item.quantity}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="font-medium">{item.name}</p>
-                      <p className="text-sm text-gray-500">
-                        {item.size && `Size: ${item.size}`}
-                        {item.isSample && " (Sample)"}
-                      </p>
-                      <p className="text-sm">Qty: {item.quantity}</p>
-                    </div>
+                    <p className="font-medium">₹{((item.price * item.quantity) / 100).toLocaleString()}</p>
                   </div>
-                  <p className="font-medium">₹{((item.price * item.quantity) / 100).toLocaleString()}</p>
-                </div>
-              ))}
+                ))}
               </div>
-              
+
               <Separator className="my-4" />
-              
+
               <div className="space-y-2">
-              <div className="flex justify-between">
-                <span>Subtotal ({cartItems.length} items)</span>
-                <span>₹{(cartSubtotal / 100).toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>GST (18%)</span>
-                <span>₹{(cartTax / 100).toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Coupon Discount</span>
-                <span>-₹{(cartTotal - adjustedCartTotal) / 100}</span>
-              </div>
-              <div className="flex justify-between text-lg font-bold mt-2">
-                <span>Total</span>
-                <span>₹{(adjustedCartTotal / 100).toLocaleString()}</span>
-              </div>
+                <div className="flex justify-between">
+                  <span>Subtotal ({cartItems.length} items)</span>
+                  <span>₹{(cartSubtotal / 100).toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>GST (18%)</span>
+                  <span>₹{(cartTax / 100).toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between text-lg font-bold mt-2">
+                  <span>Total</span>
+                  <span>₹{(cartTotal / 100).toLocaleString()}</span>
+                </div>
               </div>
             </div>
-            
+
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <h2 className="text-xl font-semibold mb-4">Payment Method</h2>
-              
+
               <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod} className="space-y-3">
                 <div className="flex items-center space-x-3 rounded-md border p-4">
                   <RadioGroupItem value="phonepe" id="phonepe" />
@@ -450,18 +443,18 @@ const CheckoutPage = () => {
                 </div>
               </RadioGroup>
             </div>
-            
+
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <div className="space-y-4">
                 <div className="flex items-center text-sm">
                   <Truck className="h-4 w-4 mr-2 text-green-600" />
                   <span>Free delivery on all orders</span>
                 </div>
-                
+
                 <div className="bg-gray-50 rounded-md p-4 text-sm">
                   <p>By placing this order, you agree to our <a href="#" className="text-primary underline">Terms and Conditions</a> and <a href="#" className="text-primary underline">Privacy Policy</a>.</p>
                 </div>
-                
+
                 <Button type="submit" className="w-full" size="lg" disabled={loading}>
                   {loading ? (
                     <span className="flex items-center">
@@ -469,7 +462,7 @@ const CheckoutPage = () => {
                       Processing...
                     </span>
                   ) : (
-                    `Place Order • ₹${(adjustedCartTotal / 100).toLocaleString()}`
+                    `Place Order • ₹${(cartTotal / 100).toLocaleString()}`
                   )}
                 </Button>
               </div>

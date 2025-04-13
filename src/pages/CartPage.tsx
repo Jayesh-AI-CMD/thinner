@@ -1,35 +1,18 @@
-
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useCart } from "@/hooks/useCart";
 import { 
   Trash2, 
   Plus, 
   Minus, 
   ShoppingCart, 
-  ArrowRight, 
-  Tag, 
-  CheckCircle2
+  ArrowRight
 } from "lucide-react";
 
 const CartPage = () => {
   const { cartItems, removeFromCart, updateQuantity, cartSubtotal, cartTax, cartTotal } = useCart();
-  const [couponCode, setCouponCode] = useState("");
-  const [couponApplied, setCouponApplied] = useState(false);
-  const [couponDiscount, setCouponDiscount] = useState(0);
   const navigate = useNavigate();
-
-  const handleApplyCoupon = () => {
-    // In a real application, this would validate the coupon with the backend
-    if (couponCode.toLowerCase() === "welcome10") {
-      setCouponApplied(true);
-      const discount = cartSubtotal * 0.1; // 10% discount
-      setCouponDiscount(discount);
-    }
-  };
 
   return (
     <Layout>
@@ -119,43 +102,6 @@ const CartPage = () => {
                     ))}
                   </div>
                 </div>
-
-                <div className="mt-4 p-4 border border-dashed border-gray-300 rounded-lg bg-white">
-                  <div className="flex flex-col sm:flex-row items-center gap-3">
-                    <div className="flex-grow">
-                      <label htmlFor="coupon" className="sr-only">Coupon Code</label>
-                      <div className="flex">
-                        <Input
-                          id="coupon"
-                          type="text"
-                          placeholder="Enter coupon code"
-                          value={couponCode}
-                          onChange={(e) => setCouponCode(e.target.value)}
-                          disabled={couponApplied}
-                          className="rounded-r-none"
-                        />
-                        <Button
-                          onClick={handleApplyCoupon}
-                          disabled={!couponCode || couponApplied}
-                          className="rounded-l-none"
-                        >
-                          {couponApplied ? "Applied" : "Apply"}
-                        </Button>
-                      </div>
-                    </div>
-                    <div className="w-full sm:w-auto flex items-center">
-                      <Tag className="h-5 w-5 text-brand-600 mr-2" />
-                      <span className="text-sm">Try code: <span className="font-semibold">WELCOME10</span></span>
-                    </div>
-                  </div>
-                  
-                  {couponApplied && (
-                    <div className="mt-3 flex items-center text-green-600">
-                      <CheckCircle2 className="h-4 w-4 mr-2" />
-                      <span className="text-sm">Coupon applied successfully! You saved ₹{couponDiscount.toFixed(2)}</span>
-                    </div>
-                  )}
-                </div>
               </div>
 
               {/* Order Summary */}
@@ -169,13 +115,6 @@ const CartPage = () => {
                       <span>₹{cartSubtotal.toFixed(2)}</span>
                     </div>
                     
-                    {couponApplied && (
-                      <div className="flex justify-between text-green-600">
-                        <span>Discount</span>
-                        <span>-₹{couponDiscount.toFixed(2)}</span>
-                      </div>
-                    )}
-                    
                     <div className="flex justify-between">
                       <span className="text-gray-600">GST (18%)</span>
                       <span>₹{cartTax.toFixed(2)}</span>
@@ -184,7 +123,7 @@ const CartPage = () => {
                     <div className="border-t pt-3 mt-3">
                       <div className="flex justify-between font-semibold text-lg">
                         <span>Total</span>
-                        <span>₹{(cartTotal - couponDiscount).toFixed(2)}</span>
+                        <span>₹{cartTotal.toFixed(2)}</span>
                       </div>
                       <p className="text-xs text-gray-500 mt-1">
                         Including ₹{cartTax.toFixed(2)} in taxes
