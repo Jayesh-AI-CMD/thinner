@@ -1,13 +1,15 @@
-
 import { Link } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
 
 interface MobileMenuProps {
   onClose: () => void;
 }
 
 const MobileMenu = ({ onClose }: MobileMenuProps) => {
+  const { user, signOut } = useAuth();
+
   return (
     <div className="fixed inset-0 z-50 md:hidden">
       <div 
@@ -118,6 +120,59 @@ const MobileMenu = ({ onClose }: MobileMenuProps) => {
                 </Link>
               </li>
             </ul>
+            {user && (
+              <div className="mt-4">
+                <ul className="space-y-2">
+                  <li>
+                    <Link 
+                      to="/dashboard" 
+                      className="block text-gray-700 hover:text-brand-600"
+                      onClick={onClose}
+                    >
+                      Dashboard
+                    </Link>
+                  </li>
+                  <li>
+                    <Link 
+                      to="/orders" 
+                      className="block text-gray-700 hover:text-brand-600"
+                      onClick={onClose}
+                    >
+                      Orders
+                    </Link>
+                  </li>
+                  <li>
+                    <Link 
+                      to="/downloads" 
+                      className="block text-gray-700 hover:text-brand-600"
+                      onClick={onClose}
+                    >
+                      Downloads
+                    </Link>
+                  </li>
+                  <li>
+                    <Link 
+                      to="/account-details" 
+                      className="block text-gray-700 hover:text-brand-600"
+                      onClick={onClose}
+                    >
+                      Account Details
+                    </Link>
+                  </li>
+                  <li>
+                    <button 
+                      onClick={() => {
+                        signOut();
+                        onClose();
+                      }} 
+                      className="block text-gray-700 hover:text-brand-600"
+                    >
+                      Logout
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            )}
           </nav>
 
           <div className="p-4 border-t">

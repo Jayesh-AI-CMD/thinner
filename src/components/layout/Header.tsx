@@ -147,10 +147,10 @@ const Header = () => {
           </Link>
 
           <div className="hidden md:block">
-            <Link to="/account">
+            <Link to="/register">
               <Button variant="outline" size="sm" className="flex items-center gap-2">
                 <User size={16} />
-                <span>Account</span>
+                <span>Sign Up</span>
               </Button>
             </Link>
           </div>
