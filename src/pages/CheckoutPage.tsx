@@ -14,10 +14,22 @@ import { createOrder } from "@/services/orderService";
 import { initiatePhonePePayment } from "@/services/paymentService";
 import { CreditCard, Truck, AlertCircle } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
-import { Address, GSTDetails } from "@/lib/types";
+import { Address, CartItem, GSTDetails } from "@/lib/types";
+
+interface CartContextType {
+  cartItems: CartItem[];
+  addToCart: (productId: string, quantity: number, variantId?: string, isSample?: boolean) => void;
+  removeFromCart: (itemIndex: number) => void;
+  updateQuantity: (itemIndex: number, quantity: number) => void;
+  clearCart: () => void;
+  cartTotal: number;
+  cartSubtotal: number;
+  cartTax: number;
+  couponDiscount: number;
+}
 
 const CheckoutPage = () => {
-  const { cartItems, cartTotal, cartSubtotal, cartTax, clearCart, couponDiscount } = useCart();
+  const { cartItems, cartTotal, cartSubtotal, cartTax, clearCart, } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -45,7 +57,7 @@ const CheckoutPage = () => {
   const [sameAsShipping, setSameAsShipping] = useState(true);
 
   // Update the total calculation to include coupon discount
-  const adjustedCartTotal = cartTotal - couponDiscount;
+  const adjustedCartTotal = cartTotal;
   
   const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -384,7 +396,7 @@ const CheckoutPage = () => {
                 </div>
                 <div className="flex justify-between">
                   <span>Coupon Discount</span>
-                  <span>-₹{(couponDiscount / 100).toLocaleString()}</span>
+                  {/* <span>-₹{(couponDiscount / 100).toLocaleString()}</span> */}
                 </div>
                 <div className="flex justify-between text-lg font-bold mt-2">
                   <span>Total</span>
