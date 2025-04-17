@@ -131,7 +131,7 @@ const AdminLoginPage = () => {
     try {
       setLoading(true);
       await signInAdmin(values.username, values.password);
-      navigate("/admin/dashboard");
+      navigate("/admin");
     } catch (error) {
       console.error("Admin login error:", error);
     } finally {
