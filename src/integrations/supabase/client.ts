@@ -1,7 +1,6 @@
-// supabase/client.ts
+// /workspaces/thinner/src/integrations/supabase/client.ts
 import { createClient } from "@supabase/supabase-js";
 
-// Replace these with your actual Supabase project URL and anon key
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
 
