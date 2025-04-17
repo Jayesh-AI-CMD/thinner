@@ -6,14 +6,25 @@ import axios from "axios";
 
 const CategorySection = () => {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const response = await axios.get("/api/products");
-      setProducts(response.data);
+      try {
+        const response = await axios.get("/api/products");
+        setProducts(Array.isArray(response.data) ? response.data : []);
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchProducts();
   }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <section className="py-16">
