@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { ShoppingCart, Menu, User, X, Search, ChevronDown } from "lucide-react";
+import { ShoppingCart, Menu, X, Search, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { LogOut, User as UserIcon, FileText, ShoppingBag, Settings } from "lucide-react";
@@ -18,7 +18,7 @@ const Header = () => {
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [showProductsMenu, setShowProductsMenu] = useState(false);
   const productsMenuTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const { cartItems, cartTotal } = useCart();
+  const { cartItems } = useCart();
   const cartItemCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
   const handleMouseEnterProductsMenu = () => {
@@ -166,7 +166,7 @@ const Header = () => {
                     </DropdownMenuItem>
                   ) : null}
                   <DropdownMenuItem asChild>
-                    <Link to="/orders">
+                    <Link to="/valid-orders-route">
                       <ShoppingBag className="mr-2 h-4 w-4" /> Orders
                     </Link>
                   </DropdownMenuItem>
@@ -176,7 +176,7 @@ const Header = () => {
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link to="/account-details">
+                    <Link to="/valid-account-details-route">
                       <Settings className="mr-2 h-4 w-4" /> Account Details
                     </Link>
                   </DropdownMenuItem>
