@@ -1,4 +1,3 @@
-
 import { Product } from "./types";
 
 export const products: Product[] = [
@@ -44,6 +43,7 @@ export const products: Product[] = [
         stock: 25,
         image: "/thinner-10l.png"
       }
+      
     ],
     mainImage: "/royal-gp-thinner.png",
     sampleAvailable: true,
@@ -236,6 +236,53 @@ export const products: Product[] = [
     mainImage: "/top-2000-high-gloss-nc-thinner.png",
     sampleAvailable: true,
     samplePrice: 70
+  },
+  {
+    id: "industrial-grade-thinner",
+    name: "Industrial Grade Thinner",
+    slug: "industrial-grade-thinner",
+    description: "Heavy-duty thinner designed for industrial applications. Provides excellent performance for large-scale projects and ensures consistent results.",
+    category: "thinner",
+    features: [
+      "Formulated for industrial-scale applications",
+      "High dilution power for tough coatings",
+      "Fast drying with minimal residue",
+      "Compatible with a wide range of paints",
+      "Durable and reliable for professional use"
+    ],
+    variants: [
+      {
+        id: "industrial-grade-thinner-500ml",
+        size: "500ML",
+        price: 210,
+        stock: 60,
+        image: "/industrial-thinner-500ml.png"
+      },
+      {
+        id: "industrial-grade-thinner-1l",
+        size: "1L",
+        price: 400,
+        stock: 50,
+        image: "/industrial-thinner-1l.png"
+      },
+      {
+        id: "industrial-grade-thinner-5l",
+        size: "5L",
+        price: 1900,
+        stock: 25,
+        image: "/industrial-thinner-5l.png"
+      },
+      {
+        id: "industrial-grade-thinner-10l",
+        size: "10L",
+        price: 3600,
+        stock: 15,
+        image: "/industrial-thinner-10l.png"
+      }
+    ],
+    mainImage: "/industrial-grade-thinner.png",
+    sampleAvailable: true,
+    samplePrice: 75
   }
 ];
 
