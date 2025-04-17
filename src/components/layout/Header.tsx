@@ -2,13 +2,15 @@ import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { ShoppingCart, Menu, User, X, Search, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
+import { LogOut, User as UserIcon, FileText, ShoppingBag, Settings } from "lucide-react";
 import { useCart } from "@/hooks/useCart";
 import { useAuth } from "@/hooks/useAuth";
 import MobileMenu from "./MobileMenu";
 import SearchBar from "../SearchBar";
 
 const Header = () => {
-  const { user } = useAuth();
+  const { user, role, signOut } = useAuth();
 
   // Gracefully handle the case where the user does not exist
   const [isScrolled, setIsScrolled] = useState(false);
@@ -149,18 +151,52 @@ const Header = () => {
 
           <div className="hidden md:block">
             {user ? (
-              <span className="text-gray-700">Welcome, {user.email || "User"}</span>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="flex items-center gap-2">
+                    <UserIcon size={16} />
+                    <span>{user.email || "User"}</span>
+                    <ChevronDown size={16} />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  {role === "Admin" || role === "Superadmin" ? (
+                    <DropdownMenuItem asChild>
+                      <Link to="/admin">Dashboard</Link>
+                    </DropdownMenuItem>
+                  ) : null}
+                  <DropdownMenuItem asChild>
+                    <Link to="/orders">
+                      <ShoppingBag className="mr-2 h-4 w-4" /> Orders
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/downloads">
+                      <FileText className="mr-2 h-4 w-4" /> Downloads
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/account-details">
+                      <Settings className="mr-2 h-4 w-4" /> Account Details
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={signOut} className="text-red-600 cursor-pointer">
+                    <LogOut className="mr-2 h-4 w-4" /> Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             ) : (
               <div className="flex items-center gap-2">
                 <Link to="/login">
                   <Button variant="outline" size="sm" className="flex items-center gap-2">
-                    <User size={16} />
+                    <UserIcon size={16} />
                     <span>Login</span>
                   </Button>
                 </Link>
                 <Link to="/register">
                   <Button variant="outline" size="sm" className="flex items-center gap-2">
-                    <User size={16} />
+                    <UserIcon size={16} />
                     <span>Sign Up</span>
                   </Button>
                 </Link>
