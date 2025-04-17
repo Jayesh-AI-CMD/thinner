@@ -1,9 +1,20 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { products } from "@/lib/product-data";
 import ProductCard from "../product/ProductCard";
+import axios from "axios";
 
 const CategorySection = () => {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const response = await axios.get("/api/products");
+      setProducts(response.data);
+    };
+    fetchProducts();
+  }, []);
+
   return (
     <section className="py-16">
       <div className="container">
@@ -15,13 +26,7 @@ const CategorySection = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {products.slice(0, 3).map(product => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-          {products.slice(3, 6).map(product => (
+          {products.slice(0, 6).map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
