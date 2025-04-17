@@ -149,8 +149,8 @@ const AdminLoginPage = () => {
       <div className="container py-12">
         <div className="max-w-md mx-auto bg-white p-8 rounded-lg shadow-sm border">
           <div className="text-center mb-6">
-            <h1 className="text-2xl font-bold">Admin Login</h1>
-            <p className="text-gray-600 mt-1">Sign in to your admin account</p>
+            <h1 className="text-2xl font-bold">Login</h1>
+            <p className="text-gray-600 mt-1">Sign in to your account</p>
           </div>
 
           <Form {...form}>
