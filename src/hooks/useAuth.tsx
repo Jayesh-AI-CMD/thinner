@@ -1,8 +1,10 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { Database } from "@/lib/supabase-types";
 import { useToast } from "@/components/ui/use-toast";
 import { User, Session } from "@supabase/supabase-js";
 
+// Extend the User interface to include additional fields like name and phone
 declare module "@supabase/supabase-js" {
   export interface User {
     name?: string;
@@ -10,76 +12,120 @@ declare module "@supabase/supabase-js" {
   }
 }
 
+// Auth context type definition
 export interface AuthContextType {
   user: User | null;
-  adminUser?: User | null; // Add adminUser if not already present
+  adminUser?: User | null;
   session: Session | null;
-  signUp: (email: string, password: string, userData?: { name?: string, phone?: string }) => Promise<void>;
+  role?: string | null;
+  signUp: (
+    email: string,
+    password: string,
+    userData?: { name?: string; phone?: string }
+  ) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
-  signInAdmin?: (username: string, password: string) => Promise<void>; // Add signInAdmin
+  signInAdmin?: (username: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   loading: boolean;
 }
 
+// Create AuthContext
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Helper type for user_roles table (maps table structure to TypeScript)
+type UserRoleRow = Database["public"]["Tables"]["user_roles"]["Row"];
+
+// Define missing types for user_roles table
+interface UserRoleInsert {
+  user_id: string;
+  role: string;
+}
+
+interface UserRoleUpdate {
+  user_id?: string;
+  role?: string;
+}
+
+// Map Supabase user to custom user object
 const mapSupabaseUserToUser = (supabaseUser: User | null): User | null => {
   if (!supabaseUser) return null;
   return {
-    ...supabaseUser, // Spread all existing properties from the Supabase User type
-    name: supabaseUser.user_metadata?.name || "", // Map name from user_metadata
-    phone: supabaseUser.user_metadata?.phone || "", // Map phone from user_metadata
+    ...supabaseUser,
+    name: supabaseUser.user_metadata?.name || "",
+    phone: supabaseUser.user_metadata?.phone || "",
   };
 };
 
+// Helper function to fetch user role
+const getUserRole = async (userId: string) => {
+  const { data, error } = await supabase
+    .from("user_roles") // Remove explicit type arguments to simplify and rely on inferred types
+    .select("role")
+    .eq("user_id", userId)
+    .single();
+
+  return { role: data?.role || null, error };
+};
+
+// AuthProvider component
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [adminUser, setAdminUser] = useState<User | null>(null); // Add adminUser state
+  const [adminUser, setAdminUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
+  const [role, setRole] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
   useEffect(() => {
-    // Set up the auth state listener
+    // Set up auth state change listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, newSession) => {
+      async (_, newSession) => {
         setSession(newSession);
-        setUser(mapSupabaseUserToUser(newSession?.user ?? null));
+        const mappedUser = mapSupabaseUserToUser(newSession?.user ?? null);
+        setUser(mappedUser);
+
+        if (mappedUser) {
+          const { role } = await getUserRole(mappedUser.id);
+          setRole(role);
+        }
+
         setLoading(false);
       }
     );
 
-    // Get the current session
-    supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
+    // Initial session fetch
+    supabase.auth.getSession().then(async ({ data: { session: currentSession } }) => {
       setSession(currentSession);
-      setUser(mapSupabaseUserToUser(currentSession?.user ?? null));
+      const mappedUser = mapSupabaseUserToUser(currentSession?.user ?? null);
+      setUser(mappedUser);
+
+      if (mappedUser) {
+        const { role } = await getUserRole(mappedUser.id);
+        setRole(role);
+      }
+
       setLoading(false);
     });
 
-    // Clean up subscription
-    return () => {
-      subscription.unsubscribe();
-    };
+    return () => subscription.unsubscribe();
   }, []);
 
   const signUp = async (
-    email: string, 
-    password: string, 
-    userData?: { name?: string, phone?: string }
+    email: string,
+    password: string,
+    userData?: { name?: string; phone?: string }
   ) => {
     try {
       const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          data: {
-            ...userData
-          }
-        }
+          data: { ...userData },
+        },
       });
 
       if (error) throw error;
-      
+
       toast({
         title: "Account created successfully!",
         description: "Please check your email for the confirmation link.",
@@ -102,26 +148,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       });
 
       if (error) {
-        if (error.message.includes("Invalid login credentials")) {
-          toast({
-            title: "Login failed",
-            description: "The email or password you entered is incorrect.",
-            variant: "destructive",
-          });
-        } else if (error.message.includes("User not found")) {
-          toast({
-            title: "User not found",
-            description: "No account exists with the provided email address.",
-            variant: "destructive",
-          });
-        } else {
-          toast({
-            title: "Error signing in",
-            description: error.message || "An unknown error occurred",
-            variant: "destructive",
-          });
-        }
+        toast({
+          title: "Login failed",
+          description: error.message || "An unknown error occurred",
+          variant: "destructive",
+        });
         throw error;
+      }
+
+      const signedInUser = data.user;
+      setUser(signedInUser);
+
+      if (signedInUser) {
+        const { role } = await getUserRole(signedInUser.id);
+        setRole(role);
       }
 
       toast({
@@ -136,7 +176,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const signInAdmin = async (username: string, password: string) => {
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
-        email: username, // Assuming admin username is an email
+        email: username,
         password,
       });
 
@@ -149,7 +189,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         throw error;
       }
 
-      setAdminUser(data.user ?? null); // Set adminUser state
+      setAdminUser(data.user ?? null);
       toast({
         title: "Admin login successful",
         description: "You have successfully signed in as an admin.",
@@ -163,11 +203,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
-      
-      setAdminUser(null); // Clear adminUser state on sign out
-      toast({
-        title: "Signed out successfully",
-      });
+
+      setAdminUser(null);
+      toast({ title: "Signed out successfully" });
     } catch (error: any) {
       toast({
         title: "Error signing out",
@@ -181,11 +219,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     <AuthContext.Provider
       value={{
         user,
-        adminUser, // Add adminUser to context value
+        adminUser,
         session,
+        role,
         signUp,
         signIn,
-        signInAdmin, // Add signInAdmin to context value
+        signInAdmin,
         signOut,
         loading,
       }}
@@ -195,6 +234,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
+// Hook to access AuthContext
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {

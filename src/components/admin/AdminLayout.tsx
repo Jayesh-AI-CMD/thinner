@@ -1,6 +1,5 @@
-
 import { ReactNode, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import AdminSidebar from "./AdminSidebar";
 import { useToast } from "@/components/ui/use-toast";
@@ -10,13 +9,11 @@ interface AdminLayoutProps {
 }
 
 const AdminLayout = ({ children }: AdminLayoutProps) => {
-  const { user, loading } = useAuth();
+  const { user, role, loading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  // In a real app, you'd check if the user has admin privileges
   useEffect(() => {
-    // Simple check - in a real app you'd verify admin role
     if (!loading && !user) {
       toast({
         title: "Access Denied",
@@ -33,6 +30,10 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
       </div>
     );
+  }
+
+  if (role !== "Superadmin" && role !== "Admin") {
+    return <Navigate to="/not-authorized" />;
   }
 
   return user ? (

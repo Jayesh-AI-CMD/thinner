@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -20,6 +19,7 @@ import RegisterPage from "./pages/RegisterPage";
 import ContactPage from "./pages/ContactPage";
 import AboutPage from "./pages/AboutPage";
 import NotFound from "./pages/NotFound";
+import NotAuthorized from "./pages/NotAuthorized";
 
 // Admin Pages
 import Dashboard from "./pages/admin/Dashboard";
@@ -56,7 +56,10 @@ const App = () => {
                 <Route path="/admin/products" element={<AdminProductsPage />} />
                 <Route path="/admin/orders" element={<OrdersPage />} />
                 <Route path="/admin/customers" element={<CustomersPage />} />
-                
+
+                {/* Not Authorized Route */}
+                <Route path="/not-authorized" element={<NotAuthorized />} />
+
                 {/* Catch-all route */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
