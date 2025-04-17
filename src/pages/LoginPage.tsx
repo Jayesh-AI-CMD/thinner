@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast"; // Add this line
 import * as z from "zod";
 import {
   Form,
@@ -46,7 +47,7 @@ function LoginPage() {
       await signIn(values.email, values.password);
       navigate("/");
     } catch (error) {
-      console.error("Login error:", error);
+toast.error(error.message || "Login failed. An unknown error occurred");
     } finally {
       setLoading(false);
     }
