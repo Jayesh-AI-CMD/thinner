@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { products } from "@/lib/product-data";
@@ -21,8 +20,8 @@ const CategorySection = () => {
           ))}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
-          {products.slice(3, 5).map(product => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+          {products.slice(3, 6).map(product => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
