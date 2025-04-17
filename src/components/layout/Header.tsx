@@ -166,12 +166,12 @@ const Header = () => {
                     </DropdownMenuItem>
                   ) : null}
                   <DropdownMenuItem asChild>
-                    <Link to="/valid-orders-route">
+                    <Link to="/orders">
                       <ShoppingBag className="mr-2 h-4 w-4" /> Orders
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link to="/valid-account-details-route">
+                    <Link to="/account">
                       <Settings className="mr-2 h-4 w-4" /> Account Details
                     </Link>
                   </DropdownMenuItem>

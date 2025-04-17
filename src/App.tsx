@@ -19,6 +19,7 @@ import RegisterPage from "./pages/RegisterPage";
 import ContactPage from "./pages/ContactPage";
 import AboutPage from "./pages/AboutPage";
 import Downloads from "./pages/Downloads";
+import Orders from "./pages/Orders";
 import NotFound from "./pages/NotFound";
 import NotAuthorized from "./pages/NotAuthorized";
 
@@ -52,6 +53,7 @@ const App = () => {
                 <Route path="/contact" element={<ContactPage />} />
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/downloads" element={<Downloads />} />
+                <Route path="/orders" element={<Orders />} />
                 
                 {/* Admin Routes */}
                 <Route path="/admin" element={<Dashboard />} />
