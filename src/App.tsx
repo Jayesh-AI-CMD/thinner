@@ -18,6 +18,7 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import ContactPage from "./pages/ContactPage";
 import AboutPage from "./pages/AboutPage";
+import Downloads from "./pages/Downloads";
 import NotFound from "./pages/NotFound";
 import NotAuthorized from "./pages/NotAuthorized";
 
@@ -50,6 +51,7 @@ const App = () => {
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/contact" element={<ContactPage />} />
                 <Route path="/about" element={<AboutPage />} />
+                <Route path="/downloads" element={<Downloads />} />
                 
                 {/* Admin Routes */}
                 <Route path="/admin" element={<Dashboard />} />

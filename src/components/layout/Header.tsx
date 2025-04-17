@@ -171,11 +171,6 @@ const Header = () => {
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link to="/downloads">
-                      <FileText className="mr-2 h-4 w-4" /> Downloads
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
                     <Link to="/valid-account-details-route">
                       <Settings className="mr-2 h-4 w-4" /> Account Details
                     </Link>
