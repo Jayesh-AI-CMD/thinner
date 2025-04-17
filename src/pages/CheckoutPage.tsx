@@ -378,7 +378,7 @@ const CheckoutPage = () => {
                         <p className="text-sm">Qty: {item.quantity}</p>
                       </div>
                     </div>
-                    <p className="font-medium">₹{((item.price * item.quantity) / 100).toLocaleString()}</p>
+                    <p className="font-medium">₹{(item.price * item.quantity).toLocaleString()}</p>
                   </div>
                 ))}
               </div>
@@ -388,15 +388,15 @@ const CheckoutPage = () => {
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span>Subtotal ({cartItems.length} items)</span>
-                  <span>₹{(cartSubtotal / 100).toLocaleString()}</span>
+                  <span>₹{cartSubtotal.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>GST (18%)</span>
-                  <span>₹{(cartTax / 100).toLocaleString()}</span>
+                  <span>₹{cartTax.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-lg font-bold mt-2">
                   <span>Total</span>
-                  <span>₹{(cartTotal / 100).toLocaleString()}</span>
+                  <span>₹{cartTotal.toLocaleString()}</span>
                 </div>
               </div>
             </div>
@@ -472,7 +472,7 @@ const CheckoutPage = () => {
                       Processing...
                     </span>
                   ) : (
-                    `Place Order • ₹${(cartTotal / 100).toLocaleString()}`
+                    `Place Order • ₹${cartTotal.toLocaleString()}`
                   )}
                 </Button>
               </div>
