@@ -85,6 +85,17 @@ const CheckoutPage = () => {
       return;
     }
 
+    // Validate cart items' quantities and amounts
+    const calculatedSubtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    if (calculatedSubtotal !== cartSubtotal) {
+      toast({
+        variant: "destructive",
+        title: "Cart mismatch",
+        description: "The cart subtotal does not match the items' total. Please refresh the page.",
+      });
+      return;
+    }
+
     setLoading(true);
 
     try {
