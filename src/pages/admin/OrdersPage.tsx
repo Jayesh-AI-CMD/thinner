@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -29,8 +28,21 @@ import { Badge } from "@/components/ui/badge";
 import { Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
+import { useRouter } from "next/router";
+import { useEffect as useAuthEffect } from "react";
 
 const OrdersPage = () => {
+  // --- Auth check ---
+  const router = useRouter();
+  useAuthEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      if (!data?.user) {
+        router.replace("/login");
+      }
+    });
+  }, [router]);
+  // --- end auth check ---
+
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
 
   // Fetch orders

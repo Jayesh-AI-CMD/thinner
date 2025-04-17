@@ -1,4 +1,3 @@
-
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import AdminLayout from "@/components/admin/AdminLayout";
@@ -11,8 +10,21 @@ import {
   TableRow 
 } from "@/components/ui/table";
 import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
+import { useEffect as useAuthEffect } from "react";
 
 const CustomersPage = () => {
+  // --- Auth check ---
+  const navigate = useNavigate();
+  useAuthEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      if (!data?.user) {
+        navigate("/login");
+      }
+    });
+  }, [navigate]);
+  // --- end auth check ---
+
   // Fetch customers (profiles)
   const { data: customers, isLoading } = useQuery({
     queryKey: ["adminCustomers"],

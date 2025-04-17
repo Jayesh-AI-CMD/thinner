@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -31,8 +30,21 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Edit, MoreVertical, Plus, Trash } from "lucide-react";
+import { useRouter } from "next/router";
+import { useEffect as useAuthEffect } from "react";
 
 const ProductsPage = () => {
+  // --- Auth check ---
+  const router = useRouter();
+  useAuthEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      if (!data?.user) {
+        router.replace("/login");
+      }
+    });
+  }, [router]);
+  // --- end auth check ---
+
   const [isAddProductDialogOpen, setIsAddProductDialogOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
 

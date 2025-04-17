@@ -1,12 +1,23 @@
-
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Package, Users, ShoppingCart, DollarSign } from "lucide-react";
+import { useRouter } from "next/router";
 
 const Dashboard = () => {
+  // --- Auth check ---
+  const router = useRouter();
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      if (!data?.user) {
+        router.replace("/login");
+      }
+    });
+  }, [router]);
+  // --- end auth check ---
+
   const [stats, setStats] = useState({
     totalProducts: 0,
     totalOrders: 0,
