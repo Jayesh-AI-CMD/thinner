@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import AdminLayout from "@/components/admin/AdminLayout";
@@ -51,6 +50,44 @@ const ProductsPage = () => {
       return data;
     },
   });
+
+  useEffect(() => {
+    const testQuery = async () => {
+      try {
+        const { data, error } = await supabase.from("products").select("*");
+        if (error) {
+          console.error("Supabase query error:", error);
+        }
+      } catch (err) {
+        console.error("Unexpected error during test query:", err);
+      }
+    };
+
+    testQuery();
+  }, []);
+
+  useEffect(() => {
+    if (products === undefined) {
+      console.error("Products data is undefined. Check the database or query.");
+    } else if (products.length === 0) {
+      console.warn("No products found in the database.");
+    }
+  }, [products]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const { data, error } = await supabase.from("products").select("*");
+        if (error) {
+          console.error("Error fetching products:", error);
+        }
+      } catch (err) {
+        console.error("Unexpected error during fetch:", err);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   const handleAddProduct = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 import { Product, ProductVariant, ProductCategory } from "@/lib/types";
 
@@ -170,5 +169,20 @@ export const fetchVariantById = async (productId: string, variantId: string): Pr
   } catch (error) {
     console.error("Error fetching variant by id:", error);
     throw error;
+  }
+};
+
+// Fetch all products without variants
+export const fetchAllProducts = async () => {
+  try {
+    const { data, error } = await supabase.from("products").select("*");
+    if (error) {
+      console.error("Error fetching products:", error);
+      return [];
+    }
+    return data;
+  } catch (err) {
+    console.error("Unexpected error:", err);
+    return [];
   }
 };
