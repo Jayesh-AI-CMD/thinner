@@ -1,4 +1,3 @@
-
 import { Product } from "./types";
 
 export const products: Product[] = [
@@ -7,7 +6,6 @@ export const products: Product[] = [
     name: "Royal GP Thinner",
     slug: "royal-gp-thinner",
     description: "Professional grade general purpose thinner for all your painting needs. Provides excellent results with minimal odor. Works well with most paint types and ensures smooth application.",
-    category: "thinner",
     features: [
       "General purpose thinner for multiple applications",
       "Exceptional quality for professional results",
@@ -54,7 +52,6 @@ export const products: Product[] = [
     name: "Sailac PU Thinner",
     slug: "sailac-pu-thinner",
     description: "Premium polyurethane thinner specially formulated for PU paints and coatings. Ensures perfect finish with excellent flow and leveling properties.",
-    category: "thinner",
     features: [
       "Specialized for polyurethane paints and coatings",
       "Ensures perfect finish with excellent flow",
@@ -101,7 +98,6 @@ export const products: Product[] = [
     name: "Top 999 NC Thinner",
     slug: "top-999-nc-thinner",
     description: "High-quality nitrocellulose thinner for professional finishing. Perfect for automotive, furniture and industrial applications requiring a premium finish.",
-    category: "thinner",
     features: [
       "Specially formulated for nitrocellulose paints",
       "Fast evaporation rate for quick drying",
@@ -148,7 +144,6 @@ export const products: Product[] = [
     name: "Royal 2000 NC Thinner",
     slug: "royal-2000-nc-thinner",
     description: "Advanced NC thinner with superior dilution power and balanced evaporation rate. Ideal for high-end furniture and automotive finishes.",
-    category: "thinner",
     features: [
       "Premium grade for high-end applications",
       "Balanced evaporation for perfect finishes",
@@ -195,7 +190,6 @@ export const products: Product[] = [
     name: "Top 2000 High Gloss NC Thinner",
     slug: "top-2000-high-gloss-nc-thinner",
     description: "Premium quality NC thinner specially formulated for high gloss finishes. Provides exceptional clarity and depth to your painted surfaces.",
-    category: "thinner",
     features: [
       "Superior gloss enhancement formula",
       "Advanced anti-hazing technology",

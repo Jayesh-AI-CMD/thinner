@@ -97,7 +97,6 @@ const ProductsPage = () => {
     const name = formData.get("name") as string;
     const slug = formData.get("slug") as string || name.toLowerCase().replace(/\s+/g, '-');
     const description = formData.get("description") as string;
-    const category = formData.get("category") as string;
     const mainImage = formData.get("mainImage") as string;
     const features = (formData.get("features") as string).split('\n').filter(Boolean);
     const sampleAvailable = formData.get("sampleAvailable") === "on";
@@ -111,11 +110,11 @@ const ProductsPage = () => {
           name,
           slug,
           description,
-          category,
           main_image: mainImage,
           features,
           sample_available: sampleAvailable,
           sample_price: samplePrice,
+          category: "default", // Replace "default" with the appropriate category value
         })
         .select();
       
@@ -171,7 +170,6 @@ const ProductsPage = () => {
               <TableRow>
                 <TableHead>Image</TableHead>
                 <TableHead>Name</TableHead>
-                <TableHead>Category</TableHead>
                 <TableHead>Variants</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
@@ -187,7 +185,6 @@ const ProductsPage = () => {
                     />
                   </TableCell>
                   <TableCell className="font-medium">{product.name}</TableCell>
-                  <TableCell>{product.category}</TableCell>
                   <TableCell>{product.product_variants?.length || 0} variants</TableCell>
                   <TableCell className="text-right">
                     <DropdownMenu>
@@ -218,7 +215,7 @@ const ProductsPage = () => {
 
               {products?.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-6 text-muted-foreground">
+                  <TableCell colSpan={4} className="text-center py-6 text-muted-foreground">
                     No products found.
                   </TableCell>
                 </TableRow>
@@ -253,16 +250,9 @@ const ProductsPage = () => {
               <Textarea id="description" name="description" required />
             </div>
             
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="category">Category</Label>
-                <Input id="category" name="category" required />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="mainImage">Main Image URL</Label>
-                <Input id="mainImage" name="mainImage" required />
-              </div>
+            <div className="space-y-2">
+              <Label htmlFor="mainImage">Main Image URL</Label>
+              <Input id="mainImage" name="mainImage" required />
             </div>
             
             <div className="space-y-2">

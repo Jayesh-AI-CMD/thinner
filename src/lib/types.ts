@@ -1,7 +1,5 @@
 export type ProductSize = "400ML" | "500ML" | "800ML" | "1600ML" | "1L" | "2L" | "4L" | "5L" | "8L" | "10L";
 
-export type ProductCategory = "thinner" | "sample" | "other";
-
 export interface ProductVariant {
   id: string;
   size: ProductSize;
@@ -15,7 +13,6 @@ export interface Product {
   name: string;
   slug: string;
   description: string;
-  category: ProductCategory;
   features: string[];
   variants: ProductVariant[];
   mainImage: string;
