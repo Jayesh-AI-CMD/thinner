@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { ShoppingCart, Menu, User, X, Search, ChevronDown } from "lucide-react";
+import { ShoppingCart, Menu, User, X, Search, ChevronDown, ShoppingBag, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/hooks/useCart";
 import { useAuth } from "@/hooks/useAuth";
@@ -8,13 +8,14 @@ import MobileMenu from "./MobileMenu";
 import SearchBar from "../SearchBar";
 
 const Header = () => {
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
 
   // Gracefully handle the case where the user does not exist
   const [isScrolled, setIsScrolled] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [showProductsMenu, setShowProductsMenu] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
   const productsMenuTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { cartItems, cartTotal } = useCart();
   const cartItemCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
@@ -30,6 +31,10 @@ const Header = () => {
     productsMenuTimeoutRef.current = setTimeout(() => {
       setShowProductsMenu(false);
     }, 200); // Delay of 200ms
+  };
+
+  const toggleDropdown = () => {
+    setShowDropdown(!showDropdown);
   };
 
   useEffect(() => {
@@ -149,7 +154,38 @@ const Header = () => {
 
           <div className="hidden md:block">
             {user ? (
-              <span className="text-gray-700">Welcome, {user.email || "User"}</span>
+              <div className="relative">
+                <button
+                  onClick={toggleDropdown}
+                  className="flex items-center text-gray-700 hover:text-brand-600 font-medium"
+                >
+                  Welcome, {user.email || "User"} <ChevronDown className="ml-1 h-4 w-4" />
+                </button>
+                {showDropdown && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md">
+                    <div className="p-2 space-y-1">
+                      <Link
+                        to="/account"
+                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"
+                      >
+                        <User className="w-4 h-4 mr-2" /> Account Details
+                      </Link>
+                      <Link
+                        to="/orders"
+                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"
+                      >
+                        <ShoppingBag className="w-4 h-4 mr-2" /> Orders
+                      </Link>
+                      <button
+                        onClick={signOut}
+                        className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"
+                      >
+                        <LogOut className="w-4 h-4 mr-2" /> Logout
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
             ) : (
               <div className="flex items-center gap-2">
                 <Link to="/login">
