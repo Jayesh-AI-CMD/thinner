@@ -28,7 +28,11 @@ export const useCartPersistence = (
     }
 
     // Calculate cart totals
-    const subtotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+    const subtotal = cartItems.reduce((total, item) => {
+      const selectedVariant = item?.product_variants?.find((data) => data?.id == item?.variantId )
+
+      return total + selectedVariant.price * item.quantity
+    }, 0);
     const tax = subtotal * 0.18; // 18% GST
     const totalAmount = subtotal + tax; // Exclude discount
 

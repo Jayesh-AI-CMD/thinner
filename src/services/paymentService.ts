@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 import { Order } from "@/lib/types";
 
@@ -9,6 +8,13 @@ interface PaymentResponse {
   error?: string;
 }
 
+/**
+ * Initiates a PhonePe payment by invoking the Supabase Edge Function.
+ * 
+ * @param orderId - The ID of the order
+ * @param amount - The payment amount
+ * @returns A promise resolving to the payment response
+ */
 export const initiatePhonePePayment = async (
   orderId: string,
   amount: number
@@ -17,16 +23,16 @@ export const initiatePhonePePayment = async (
     // Get the base URL dynamically
     const baseUrl = window.location.origin;
     const callbackUrl = `${baseUrl}/order/confirmation`;
-    
-    // Get the current user
-    const { data: { user } } = await supabase.auth.getUser();
-    
-    if (!user) {
+
+    // Get the current authenticated user
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (authError || !user) {
       throw new Error("User must be logged in to process payment");
     }
 
-    // Call the PhonePe payment function
-    const { data, error } = await supabase.functions.invoke("phonepe-payment", {
+    // Invoke the PhonePe payment Edge Function
+    const { data, error } = await supabase.functions.invoke("phonepe-init", {
       body: {
         amount,
         orderId,
@@ -35,7 +41,10 @@ export const initiatePhonePePayment = async (
       },
     });
 
-    if (error) throw error;
+    if (error) {
+      console.error("Edge Function invocation failed:", error);
+      throw new Error("Failed to initiate payment");
+    }
 
     return data as PaymentResponse;
   } catch (error: any) {
@@ -47,6 +56,13 @@ export const initiatePhonePePayment = async (
   }
 };
 
+/**
+ * Verifies the payment status for a given order and payment ID.
+ * 
+ * @param orderId - The ID of the order
+ * @param paymentId - The payment ID
+ * @returns A promise resolving to the payment verification response
+ */
 export const verifyPaymentStatus = async (
   orderId: string,
   paymentId: string
@@ -55,9 +71,8 @@ export const verifyPaymentStatus = async (
   order?: Order;
   error?: string;
 }> => {
-  // In a real implementation, you would verify with PhonePe
-  // For now, we'll just check if the order exists with the payment ID
   try {
+    // Check if the order exists with the specified payment ID
     const { data, error } = await supabase
       .from("orders")
       .select("*")
@@ -65,16 +80,12 @@ export const verifyPaymentStatus = async (
       .eq("payment_id", paymentId)
       .single();
 
-    if (error) throw error;
-
-    if (!data) {
-      return {
-        success: false,
-        error: "Order not found or payment verification failed",
-      };
+    if (error) {
+      console.error("Order verification failed:", error);
+      throw new Error("Order not found or payment verification failed");
     }
 
-    // Update order status to processing after payment
+    // Update the order status to "processing" after payment
     const { error: updateError } = await supabase
       .from("orders")
       .update({ 
@@ -82,7 +93,10 @@ export const verifyPaymentStatus = async (
       })
       .eq("id", orderId);
 
-    if (updateError) throw updateError;
+    if (updateError) {
+      console.error("Failed to update order status:", updateError);
+      throw new Error("Failed to update order status");
+    }
 
     // Fetch the full order details
     const order = await fetchOrderById(orderId);
@@ -100,7 +114,12 @@ export const verifyPaymentStatus = async (
   }
 };
 
-// Helper function to fetch an order by ID
+/**
+ * Fetches an order by its ID, including related order items.
+ * 
+ * @param orderId - The ID of the order
+ * @returns A promise resolving to the order details or null if not found
+ */
 const fetchOrderById = async (orderId: string): Promise<Order | null> => {
   try {
     const { data, error } = await supabase
@@ -112,7 +131,10 @@ const fetchOrderById = async (orderId: string): Promise<Order | null> => {
       .eq("id", orderId)
       .single();
 
-    if (error) throw error;
+    if (error) {
+      console.error("Error fetching order by ID:", error);
+      throw new Error("Failed to fetch order details");
+    }
 
     // Transform the data to match our Order type
     const items = data.order_items.map((item: any) => ({
@@ -122,7 +144,7 @@ const fetchOrderById = async (orderId: string): Promise<Order | null> => {
       price: item.price,
       quantity: item.quantity,
       size: item.size,
-      image: "", // We would need to fetch this separately
+      image: "", // Placeholder, fetch image separately if necessary
       isSample: item.is_sample,
     }));
 
@@ -162,7 +184,7 @@ const fetchOrderById = async (orderId: string): Promise<Order | null> => {
       createdAt: data.created_at,
     };
   } catch (error) {
-    console.error("Error fetching order by id:", error);
+    console.error("Error fetching order by ID:", error);
     return null;
   }
 };

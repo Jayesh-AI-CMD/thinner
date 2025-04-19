@@ -6,7 +6,7 @@ import { useCartPersistence } from "./useCartPersistence";
 
 interface CartContextType {
   cartItems: CartItem[];
-  addToCart: (productId: string, quantity: number, variantId?: string, isSample?: boolean) => void;
+  addToCart: (product: any, quantity: number, variantId?: string, isSample?: boolean) => void;
   removeFromCart: (itemIndex: number) => void;
   updateQuantity: (itemIndex: number, quantity: number) => void;
   clearCart: () => void;
@@ -25,53 +25,26 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   useCartPersistence(cartItems, setCartItems, setCartSubtotal, setCartTax, setCartTotal);
 
-  const addToCart = (productId: string, quantity: number, variantId?: string, isSample: boolean = false) => {
-    const product = getProductById(productId);
+  const addToCart = (product: any, quantity: number, variantId?: string, isSample: boolean = false) => {
+    console.log("🚀 ~ addToCart ~ productId:", product)
     
     if (!product) {
       toast.error("Product not found");
       return;
     }
 
-    let itemToAdd: CartItem;
+    const newProduct = {
+      ...product,
+      quantity,
+      variantId,
+      isSample
+    };
 
-    if (isSample) {
-      // Add sample to cart
-      itemToAdd = {
-        productId,
-        name: `${product.name} Sample`,
-        price: product.samplePrice,
-        quantity,
-        image: product.mainImage,
-        isSample: true
-      };
-    } else if (variantId) {
-      // Add specific variant to cart
-      const variant = getVariantById(productId, variantId);
-      
-      if (!variant) {
-        toast.error("Product variant not found");
-        return;
-      }
-
-      itemToAdd = {
-        productId,
-        variantId,
-        name: product.name,
-        price: variant.price,
-        quantity,
-        size: variant.size,
-        image: variant.image
-      };
-    } else {
-      toast.error("Please select a product variant");
-      return;
-    }
-
+   
     setCartItems(prevItems => {
       // Always add a new item to the cart, even if it has the same productId and variantId
       toast.success("Product added to cart");
-      return [...prevItems, itemToAdd];
+      return [...prevItems, newProduct];
     });
   };
 

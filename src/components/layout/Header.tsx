@@ -76,7 +76,7 @@ const Header = () => {
           <Link to="/" className="text-gray-700 hover:text-brand-600 font-medium">
             Home
           </Link>
-          <div
+          {/* <div
             className="relative"
             onMouseEnter={handleMouseEnterProductsMenu}
             onMouseLeave={handleMouseLeaveProductsMenu}
@@ -129,7 +129,10 @@ const Header = () => {
                 </div>
               </div>
             )}
-          </div>
+          </div> */}
+          <Link to="/products" className="text-gray-700 hover:text-brand-600 font-medium">
+            Products
+          </Link>
           <Link to="/about" className="text-gray-700 hover:text-brand-600 font-medium">
             About Us
           </Link>

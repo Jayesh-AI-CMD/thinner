@@ -13,6 +13,8 @@ const ProductsPage = () => {
       return data;
     },
   });
+  console.log('data',products);
+  
 
   const mappedProducts = products?.map((product) => ({
     id: product.id,

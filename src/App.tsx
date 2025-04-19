@@ -26,6 +26,7 @@ import Dashboard from "./pages/admin/Dashboard";
 import AdminProductsPage from "./pages/admin/ProductsPage";
 import OrdersPage from "./pages/admin/OrdersPage";
 import CustomersPage from "./pages/admin/CustomersPage";
+import ProductDetailPageLatest from './pages/ProductDetailPageLatest';
 
 const App = () => {
   // Create a new QueryClient instance inside the component
@@ -43,6 +44,7 @@ const App = () => {
                 <Route path="/" element={<Index />} />
                 <Route path="/products" element={<ProductsPage />} />
                 <Route path="/products/:slug" element={<ProductDetailPage />} />
+                <Route path="/products/id/:id" element={<ProductDetailPageLatest />} />
                 <Route path="/cart" element={<CartPage />} />
                 <Route path="/checkout" element={<CheckoutPage />} />
                 <Route path="/order/confirmation" element={<OrderConfirmationPage />} />

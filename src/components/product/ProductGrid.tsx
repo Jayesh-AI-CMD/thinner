@@ -12,6 +12,7 @@ interface ProductGridProps {
 const ProductGrid = ({ products }: ProductGridProps) => {
   const [showFilters, setShowFilters] = useState(false);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
+  console.log("🚀 ~ ProductGrid ~ filteredProducts:", filteredProducts)
   const [filters, setFilters] = useState({
     category: "",
     sampleAvailable: false,

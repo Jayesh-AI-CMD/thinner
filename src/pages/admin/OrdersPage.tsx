@@ -121,7 +121,7 @@ const OrdersPage = () => {
                   <TableCell>
                     {format(new Date(order.created_at), "MMM dd, yyyy")}
                   </TableCell>
-                  <TableCell>₹{(order.total / 100).toLocaleString()}</TableCell>
+                  <TableCell>₹{(order.total ).toLocaleString()}</TableCell>
                   <TableCell>
                     <Badge className={getStatusColor(order.status)}>
                       {order.status}
@@ -230,10 +230,10 @@ const OrdersPage = () => {
                           {item.is_sample && " (Sample)"}
                         </TableCell>
                         <TableCell>{item.size || "-"}</TableCell>
-                        <TableCell>₹{(item.price / 100).toLocaleString()}</TableCell>
+                        <TableCell>₹{(item.price ).toLocaleString()}</TableCell>
                         <TableCell>{item.quantity}</TableCell>
                         <TableCell className="text-right">
-                          ₹{((item.price * item.quantity) / 100).toLocaleString()}
+                          ₹{((item.price * item.quantity)).toLocaleString()}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -242,9 +242,9 @@ const OrdersPage = () => {
               </div>
               
               <div className="space-y-1 text-right">
-                <p className="text-sm">Subtotal: ₹{(selectedOrder.subtotal / 100).toLocaleString()}</p>
-                <p className="text-sm">GST (18%): ₹{(selectedOrder.tax / 100).toLocaleString()}</p>
-                <p className="font-bold">Total: ₹{(selectedOrder.total / 100).toLocaleString()}</p>
+                <p className="text-sm">Subtotal: ₹{(selectedOrder.subtotal ).toLocaleString()}</p>
+                <p className="text-sm">GST (18%): ₹{(selectedOrder.tax ).toLocaleString()}</p>
+                <p className="font-bold">Total: ₹{(selectedOrder.total ).toLocaleString()}</p>
               </div>
               
               <div className="flex justify-between">
