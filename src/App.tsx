@@ -1,10 +1,9 @@
-
 import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import { CartProvider } from "@/hooks/useCart";
 import { AuthProvider } from "@/hooks/useAuth";
 
@@ -20,6 +19,7 @@ import RegisterPage from "./pages/RegisterPage";
 import ContactPage from "./pages/ContactPage";
 import AboutPage from "./pages/AboutPage";
 import NotFound from "./pages/NotFound";
+import UserProfilePage from "./pages/UserProfilePage";
 
 // Admin Pages
 import Dashboard from "./pages/admin/Dashboard";
@@ -27,6 +27,7 @@ import AdminProductsPage from "./pages/admin/ProductsPage";
 import OrdersPage from "./pages/admin/OrdersPage";
 import CustomersPage from "./pages/admin/CustomersPage";
 import ProductDetailPageLatest from './pages/ProductDetailPageLatest';
+import UserOrdersPage from './pages/UserOrdersPage';
 
 const App = () => {
   // Create a new QueryClient instance inside the component
@@ -52,6 +53,8 @@ const App = () => {
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/contact" element={<ContactPage />} />
                 <Route path="/about" element={<AboutPage />} />
+                <Route path="/orders" element={<UserOrdersPage />} />
+                <Route path="/account" element={<UserProfilePage />} />
                 
                 {/* Admin Routes */}
                 <Route path="/admin" element={<Dashboard />} />

@@ -113,24 +113,18 @@ const CheckoutPage = () => {
         useGST ? gstDetails : undefined
       );
 
-      // Process the payment based on the selected method
-      if (paymentMethod === "phonepe") {
-        const paymentResponse = await initiatePhonePePayment(order.id, cartTotal / 100); // Convert to rupees
+      const paymentResponse = await initiatePhonePePayment(order.id, cartTotal / 100); // Convert to rupees
 
-        if (!paymentResponse.redirectUrl) {
-          throw new Error(paymentResponse.error || "Payment failed");
-        }
-
-        // Clear the cart
-        clearCart();
-
-        // Redirect to PhonePe payment page
-        window.location.href = paymentResponse.redirectUrl as string;
-      } else if (paymentMethod === "bank_transfer") {
-        // For Bank Transfer, just redirect to confirmation
-        clearCart();
-        navigate(`/order/confirmation?orderId=${order.id}&paymentId=bank_transfer_${Date.now()}`);
+      if (!paymentResponse.redirectUrl) {
+        throw new Error(paymentResponse.error || "Payment failed");
       }
+
+      // Clear the cart
+      clearCart();
+
+      // Redirect to PhonePe payment page
+      window.location.href = paymentResponse.redirectUrl as string;
+      
     } catch (error: any) {
       console.error("Checkout error:", error);
       toast({
@@ -406,7 +400,7 @@ const CheckoutPage = () => {
                 </div>
               </div>
             </div>
-
+{/* 
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <h2 className="text-xl font-semibold mb-4">Payment Method</h2>
 
@@ -458,7 +452,7 @@ const CheckoutPage = () => {
                   </Label>
                 </div>
               </RadioGroup>
-            </div>
+            </div> */}
 
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <div className="space-y-4">

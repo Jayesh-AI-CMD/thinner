@@ -9,10 +9,12 @@ interface ProductCardProps {
 const ProductCard = ({ product }: ProductCardProps) => {
   console.log("🚀 ~ ProductCard ~ product:", product)
   // Calculate the minimum price from variants
-  const minPrice = product?.variants?.reduce(
-    (min, variant) => (variant.price < min ? variant.price : min),
-    product.variants[0]?.price || 0
-  );
+  const minPrice = product?.variants?.length
+  ? product.variants.reduce((min, variant) => {
+      const price = variant.price;
+      return price < min ? price : min;
+    }, product.variants[0].price)
+  : null;
 
   return (
     <div className="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
@@ -30,7 +32,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
         <p className="text-sm text-gray-500 mb-2 truncate">{product.category}</p>
         <div className="flex items-center justify-between mb-2">
           <span className="text-sm font-medium text-gray-700">
-            ₹{minPrice / 100 ?? 0}
+            ₹{minPrice  ?? 0}
           </span>
           {product.sampleAvailable ? (
             <span className="text-xs text-green-600 flex items-center">

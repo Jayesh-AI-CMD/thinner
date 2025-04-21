@@ -34,9 +34,9 @@ export const initiatePhonePePayment = async (
     // Invoke the PhonePe payment Edge Function
     const { data, error } = await supabase.functions.invoke("phonepe-init", {
       body: {
-        amount,
-        orderId,
-        callbackUrl,
+        amount: amount * 100,
+        orderId: orderId,
+        callbackUrl:callbackUrl,
         userId: user.id,
       },
     });

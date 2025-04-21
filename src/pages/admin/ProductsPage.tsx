@@ -55,7 +55,10 @@ const ProductsPage = () => {
   useEffect(() => {
     const testQuery = async () => {
       try {
-        const { data, error } = await supabase.from("products").select("*");
+        const { data, error } = await supabase.from("products").select(`
+          *,
+          product_variants (*)
+        `);
         if (error) {
           console.error("Supabase query error:", error);
         }
@@ -78,7 +81,10 @@ const ProductsPage = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const { data, error } = await supabase.from("products").select("*");
+        const { data, error } = await supabase.from("products").select(`
+          *,
+          product_variants (*)
+        `);
         if (error) {
           console.error("Error fetching products:", error);
         }

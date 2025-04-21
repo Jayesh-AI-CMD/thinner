@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import ProductCard from "./ProductCard";
 import { Product } from "@/lib/types";
@@ -12,7 +11,6 @@ interface ProductGridProps {
 const ProductGrid = ({ products }: ProductGridProps) => {
   const [showFilters, setShowFilters] = useState(false);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
-  console.log("🚀 ~ ProductGrid ~ filteredProducts:", filteredProducts)
   const [filters, setFilters] = useState({
     category: "",
     sampleAvailable: false,
@@ -42,7 +40,6 @@ const ProductGrid = ({ products }: ProductGridProps) => {
         (min, variant) => (variant.price < min ? variant.price : min),
         p.variants[0]?.price || 0
       );
-      
       return minPrice >= filters.priceRange.min && minPrice <= filters.priceRange.max;
     });
 

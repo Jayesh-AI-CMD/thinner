@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import AdminLayout from "@/components/admin/AdminLayout";
+import Layout from "@/components/layout/Layout";
 import {
   Table,
   TableBody,
@@ -20,18 +20,17 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 
-const OrdersPage = () => {
+const UserOrdersPage = () => {
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
 
   // Fetch orders
   const { data: orders, isLoading } = useQuery({
-    queryKey: ["adminOrders"],
+    queryKey: ["userOrders"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("orders")
         .select(`
           id,
-          user_id,
           status,
           subtotal,
           tax,
@@ -84,9 +83,9 @@ const OrdersPage = () => {
   };
 
   return (
-    <AdminLayout>
-      <div className="space-y-6">
-        <h1 className="text-3xl font-bold">Orders</h1>
+    <Layout>
+      <div className="space-y-6 container mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold">My Orders</h1>
 
         {isLoading ? (
           <div className="animate-pulse space-y-2">
@@ -99,7 +98,6 @@ const OrdersPage = () => {
             <TableHeader>
               <TableRow>
                 <TableHead>Order ID</TableHead>
-                <TableHead>Customer</TableHead>
                 <TableHead>Date</TableHead>
                 <TableHead>Total</TableHead>
                 <TableHead>Status</TableHead>
@@ -112,7 +110,6 @@ const OrdersPage = () => {
                   <TableCell className="font-medium">
                     {order.id.slice(0, 8)}...
                   </TableCell>
-                  <TableCell>{order.shipping_name}</TableCell>
                   <TableCell>
                     {format(new Date(order.created_at), "MMM dd, yyyy")}
                   </TableCell>
@@ -137,7 +134,7 @@ const OrdersPage = () => {
               {orders?.length === 0 && (
                 <TableRow>
                   <TableCell
-                    colSpan={6}
+                    colSpan={5}
                     className="text-center py-6 text-muted-foreground"
                   >
                     No orders found.
@@ -260,8 +257,8 @@ const OrdersPage = () => {
           )}
         </DialogContent>
       </Dialog>
-    </AdminLayout>
+    </Layout>
   );
 };
 
-export default OrdersPage;
+export default UserOrdersPage;
