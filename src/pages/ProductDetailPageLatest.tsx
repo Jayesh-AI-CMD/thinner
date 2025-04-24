@@ -52,13 +52,29 @@ const ProductDetailPageLatest = () => {
       try {
         const { data, error } = await supabase
           .from("products")
-          .select("*")
+          .select(
+            `
+            *,
+            product_variants (*)
+          `
+          )
           .neq("id", id)
           .limit(4);
 
         if (error) throw error;
 
-        setRelatedProducts(data);
+        const mappedProducts = data?.map((product) => ({
+          id: product.id,
+          name: product.name,
+          description: product.description,
+          mainImage: product.main_image,
+          features: product.features,
+          sampleAvailable: product.sample_available,
+          samplePrice: product.sample_price,
+          slug: product.slug,
+          variants: product.product_variants.map((variant) => variant),
+        }));
+        setRelatedProducts(mappedProducts);
       } catch (err) {
         console.error("Error fetching related products:", err);
       }

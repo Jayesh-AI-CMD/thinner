@@ -1,5 +1,5 @@
 
-import { Home, Package, Users, FileText, Settings, LogOut } from "lucide-react";
+import { Home, Package, Users, FileText, Settings, LogOut, Gift } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
@@ -13,7 +13,7 @@ const AdminSidebar = () => {
     { icon: Package, label: "Products", path: "/admin/products" },
     { icon: FileText, label: "Orders", path: "/admin/orders" },
     { icon: Users, label: "Customers", path: "/admin/customers" },
-    { icon: Settings, label: "Settings", path: "/admin/settings" },
+    { icon: Gift, label: "Coupon", path: "/admin/coupon" },
   ];
 
   return (

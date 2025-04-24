@@ -28,6 +28,7 @@ import OrdersPage from "./pages/admin/OrdersPage";
 import CustomersPage from "./pages/admin/CustomersPage";
 import ProductDetailPageLatest from './pages/ProductDetailPageLatest';
 import UserOrdersPage from './pages/UserOrdersPage';
+import Coupon from './pages/Coupon';
 
 const App = () => {
   // Create a new QueryClient instance inside the component
@@ -61,6 +62,7 @@ const App = () => {
                 <Route path="/admin/products" element={<AdminProductsPage />} />
                 <Route path="/admin/orders" element={<OrdersPage />} />
                 <Route path="/admin/customers" element={<CustomersPage />} />
+                <Route path="/admin/coupon" element={<Coupon />} />
                 
                 {/* Catch-all route */}
                 <Route path="*" element={<NotFound />} />

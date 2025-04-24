@@ -19,9 +19,11 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
+import html2pdf from "html2pdf.js";
 
 const UserOrdersPage = () => {
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
+  const [isDownloading, setIsDownloading] = useState<any>(false);
 
   // Fetch orders
   const { data: orders, isLoading } = useQuery({
@@ -29,37 +31,22 @@ const UserOrdersPage = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("orders")
-        .select(`
-          id,
-          status,
-          subtotal,
-          tax,
-          total,
-          shipping_name,
-          shipping_email,
-          shipping_phone,
-          shipping_address,
-          shipping_city,
-          shipping_state,
-          shipping_pincode,
-          gst_number,
-          gst_business_name,
-          gst_address,
-          payment_method,
-          created_at,
-          order_items (
-            id,
-            product_id,
-            variant_id,
-            name,
-            size,
-            price,
-            quantity,
-            is_sample
-          )
-        `)
+        .select(
+          `
+        *,
+        order_items (
+          *,
+          product_variants (*)
+        )
+      `
+        )
         .order("created_at", { ascending: false });
 
+      if (error) {
+        console.error("Supabase Query Error:", error);
+      } else {
+        console.log("Orders Data:", data);
+      }
       if (error) throw error;
       return data;
     },
@@ -79,6 +66,31 @@ const UserOrdersPage = () => {
         return "bg-red-100 text-red-800";
       default:
         return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  const downloadPDF = async () => {
+    setIsDownloading(true);
+    const element = document.getElementById("order-details-dialog");
+    if (!element) {
+      setIsDownloading(false);
+      return;
+    }
+
+    const options = {
+      margin: 0.5,
+      filename: `Order_${selectedOrder.id}.pdf`,
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+    };
+
+    try {
+      await html2pdf().set(options).from(element).save();
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+    } finally {
+      setIsDownloading(false);
     }
   };
 
@@ -114,10 +126,9 @@ const UserOrdersPage = () => {
                     {format(new Date(order.created_at), "MMM dd, yyyy")}
                   </TableCell>
                   <TableCell>₹{order.total.toLocaleString()}</TableCell>
-                  <TableCell>
-                    <Badge className={getStatusColor(order.status)}>
+                  <TableCell className="">
+                    {/* <Badge className={getStatusColor(order.status)}> */}
                       {order.status}
-                    </Badge>
                   </TableCell>
                   <TableCell>
                     <Button
@@ -157,14 +168,32 @@ const UserOrdersPage = () => {
           </DialogHeader>
 
           {selectedOrder && (
-            <div className="space-y-6">
+            <div id="order-details-dialog" className="space-y-6">
+              {/* Logo and Seller Information */}
+              <div className="flex justify-between items-center border-b pb-4">
+                <div>
+                  <h3 className="text-lg font-bold">Seller Information</h3>
+                  <p className="text-sm">Seller Name: XYZ Pvt. Ltd.</p>
+                  <p className="text-sm">GST Number: 22AAAAA0000A1Z5</p>
+                  <p className="text-sm">
+                    Address: 123 Business Street, City, State, 123456
+                  </p>
+                </div>
+                <div>
+                  <img
+                    src="/public/logo.png" // Replace with the actual logo path
+                    alt="Seller Logo"
+                    className="h-16"
+                  />
+                </div>
+              </div>
+
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <h3 className="font-medium">Order Information</h3>
                   <p className="text-sm">Order ID: {selectedOrder.id}</p>
                   <p className="text-sm">
-                    Date:{" "}
-                    {format(new Date(selectedOrder.created_at), "PPpp")}
+                    Date: {format(new Date(selectedOrder.created_at), "PPpp")}
                   </p>
                   <p className="text-sm">
                     Payment Method: {selectedOrder.payment_method}
@@ -172,9 +201,7 @@ const UserOrdersPage = () => {
                   <p className="text-sm">
                     Status:
                     <Badge
-                      className={`ml-2 ${getStatusColor(
-                        selectedOrder.status
-                      )}`}
+                      className={`ml-2 ${getStatusColor(selectedOrder.status)}`}
                     >
                       {selectedOrder.status}
                     </Badge>
@@ -208,6 +235,9 @@ const UserOrdersPage = () => {
                   <p className="text-sm">
                     Business Name: {selectedOrder.gst_business_name}
                   </p>
+                  <p className="text-sm">
+                    GST Address: {selectedOrder.gst_address}
+                  </p>
                 </div>
               )}
 
@@ -230,7 +260,7 @@ const UserOrdersPage = () => {
                           {item.name}
                           {item.is_sample && " (Sample)"}
                         </TableCell>
-                        <TableCell>{item.size || "-"}</TableCell>
+                        <TableCell>{item?.product_variants?.size}</TableCell>
                         <TableCell>₹{item.price.toLocaleString()}</TableCell>
                         <TableCell>{item.quantity}</TableCell>
                         <TableCell className="text-right">
@@ -253,6 +283,17 @@ const UserOrdersPage = () => {
                   Total: ₹{selectedOrder.total.toLocaleString()}
                 </p>
               </div>
+
+                <div className="text-right mt-4">
+              {!isDownloading && (
+                  <Button
+                    onClick={downloadPDF}
+                    className="bg-blue-500 text-white px-4 py-2 rounded no-print"
+                  >
+                    Download PDF
+                  </Button>
+              )}
+                </div>
             </div>
           )}
         </DialogContent>

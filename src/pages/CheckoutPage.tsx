@@ -113,14 +113,14 @@ const CheckoutPage = () => {
         useGST ? gstDetails : undefined
       );
 
-      const paymentResponse = await initiatePhonePePayment(order.id, cartTotal / 100); // Convert to rupees
+      // const paymentResponse = await initiatePhonePePayment(order.id, cartTotal / 100); // Convert to rupees
 
       if (!paymentResponse.redirectUrl) {
         throw new Error(paymentResponse.error || "Payment failed");
       }
 
       // Clear the cart
-      clearCart();
+      // clearCart();
 
       // Redirect to PhonePe payment page
       window.location.href = paymentResponse.redirectUrl as string;

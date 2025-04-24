@@ -142,7 +142,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       if (error) {
         toast({
-          title: "Admin login failed",
+          title: "Login failed",
           description: error.message || "An unknown error occurred",
           variant: "destructive",
         });
@@ -151,11 +151,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       setAdminUser(data.user ?? null); // Set adminUser state
       toast({
-        title: "Admin login successful",
+        title: "Login successful",
         description: "You have successfully signed in as an admin.",
       });
     } catch (error: any) {
-      console.error("Admin sign-in error:", error);
+      console.error("Sign-in error:", error);
     }
   };
 
