@@ -12,6 +12,7 @@ export const createOrder = async (
   paymentMethod: string,
   gstDetails?: GSTDetails
 ): Promise<Order> => {
+  console.log("🚀 ~ orderItems ~ items:", items)
   try {
     const user = supabase.auth.getUser();
     if (!user) {
@@ -44,16 +45,19 @@ export const createOrder = async (
     if (error) throw error;
 
     // Create order items
-    const orderItems = items.map((item) => ({
-      order_id: order.id,
-      product_id: item.productId,
-      variant_id: item.variantId,
-      is_sample: item.isSample || false,
-      quantity: item.quantity,
-      price: item.price,
-      name: item.name,
-      size: item.size,
-    }));
+    const orderItems = items.map((item) => {
+      const selectedVariant = item?.product_variants?.find((data) => data?.id == item?.variantId);
+      return ({
+        order_id: order.id,
+        product_id: item.id,
+        variant_id: item.variantId,
+        is_sample: item.isSample || false,
+        quantity: item.quantity,
+        price: selectedVariant.price,
+        name: item.name,
+        size: item.size,
+      })
+    });
 
     const { error: itemsError } = await supabase.from("order_items").insert(orderItems);
 

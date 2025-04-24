@@ -34,6 +34,7 @@ import { Edit, MoreVertical, Plus, Trash } from "lucide-react";
 const ProductsPage = () => {
   const [isAddProductDialogOpen, setIsAddProductDialogOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
+  const [variants, setVariants] = useState([{ size: "", price: "", stock: "", image: null}]);
 
   // Fetch products
   const { data: products, isLoading, refetch } = useQuery({
@@ -54,7 +55,10 @@ const ProductsPage = () => {
   useEffect(() => {
     const testQuery = async () => {
       try {
-        const { data, error } = await supabase.from("products").select("*");
+        const { data, error } = await supabase.from("products").select(`
+          *,
+          product_variants (*)
+        `);
         if (error) {
           console.error("Supabase query error:", error);
         }
@@ -77,7 +81,10 @@ const ProductsPage = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const { data, error } = await supabase.from("products").select("*");
+        const { data, error } = await supabase.from("products").select(`
+          *,
+          product_variants (*)
+        `);
         if (error) {
           console.error("Error fetching products:", error);
         }
@@ -89,22 +96,60 @@ const ProductsPage = () => {
     fetchProducts();
   }, []);
 
+  const handleImageUpload = async (file: File): Promise<string | null> => {
+    try {
+      const fileName = `${Date.now()}-${file.name}`;
+      const { data, error } = await supabase.storage
+        .from("product-images") // Replace with your Supabase storage bucket name
+        .upload(fileName, file);
+        console.log("🚀 ~ handleImageUpload ~ data:", data)
+
+      if (error) {
+        console.error("Error uploading image:", error);
+        toast.error("Failed to upload image.");
+        return null;
+      }
+
+      const { data:pathUrl } = await supabase.storage
+        .from("product-images")
+        .getPublicUrl(data.path);
+        console.log("🚀 ~ handleImageUpload ~ publicURL:", pathUrl)
+
+      return pathUrl.publicUrl;
+    } catch (err) {
+      console.error("Unexpected error during image upload:", err);
+      toast.error("Unexpected error during image upload.");
+      return null;
+    }
+  };
+
   const handleAddProduct = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    
+
     // Extract form values
     const name = formData.get("name") as string;
     const slug = formData.get("slug") as string || name.toLowerCase().replace(/\s+/g, '-');
     const description = formData.get("description") as string;
-    const mainImage = formData.get("mainImage") as string;
+    const mainImageFile = formData.get("mainImage") as File;
     const features = (formData.get("features") as string).split('\n').filter(Boolean);
     const sampleAvailable = formData.get("sampleAvailable") === "on";
     const samplePrice = sampleAvailable ? Number(formData.get("samplePrice")) * 100 : null;
-    
+    const category = formData.get("category") as string;
+
     try {
+      // Upload the main image
+      let mainImage = "";
+      if (mainImageFile) {
+        const uploadedImageUrl = await handleImageUpload(mainImageFile);
+        console.log("🚀 ~ handleAddProduct ~ uploadedImageUrl:", uploadedImageUrl)
+        if (!uploadedImageUrl) return; // Stop if image upload fails
+        mainImage = uploadedImageUrl;
+        console.log("🚀 ~ handleAddProduct ~ mainImage:", mainImage)
+      }
+
       // Insert the product
-      const { data, error } = await supabase
+      const { data: productData, error: productError } = await supabase
         .from("products")
         .insert({
           name,
@@ -114,12 +159,37 @@ const ProductsPage = () => {
           features,
           sample_available: sampleAvailable,
           sample_price: samplePrice,
-          category: "default", // Replace "default" with the appropriate category value
+          category,
         })
         .select();
-      
-      if (error) throw error;
-      
+
+      if (productError) throw productError;
+
+      // Insert variants
+      const productId = productData[0].id;
+      console.log("🚀 ~ handleAddProduct ~ productData:", productData)
+      const variantPromises = variants.map(async (variant) => {
+        let variantImage = variant.image;
+        if (variant.image) {
+          const uploadedVariantImageUrl = await handleImageUpload(variant.image);
+          if (!uploadedVariantImageUrl) return null; // Skip if image upload fails
+          variantImage = uploadedVariantImageUrl;
+        }
+        return {
+          ...variant,
+          image: variantImage,
+          product_id: productId,
+        };
+      });
+
+      const resolvedVariants = await Promise.all(variantPromises);
+      console.log("🚀 ~ handleAddProduct ~ resolvedVariants:", resolvedVariants)
+      const { error: variantError } = await supabase
+        .from("product_variants")
+        .insert(resolvedVariants); // Filter out null values
+
+      if (variantError) throw variantError;
+
       toast.success("Product added successfully!");
       setIsAddProductDialogOpen(false);
       refetch();
@@ -145,6 +215,26 @@ const ProductsPage = () => {
     } catch (error: any) {
       toast.error(`Error deleting product: ${error.message}`);
     }
+  };
+
+  const addVariant = () => {
+    setVariants([...variants, { size: "", price: "", stock: "", image: "" }]);
+  };
+
+  const removeVariant = (index: number) => {
+    setVariants(variants.filter((_, i) => i !== index));
+  };
+
+  const handleVariantChange = (index: number, field: string, value: string) => {
+    const updatedVariants = [...variants];
+    updatedVariants[index][field] = value;
+    setVariants(updatedVariants);
+  };
+
+  const handleVariantFileChange = (index: number, file: File) => {
+    const updatedVariants = [...variants];
+    updatedVariants[index].image = file;
+    setVariants(updatedVariants);
   };
 
   return (
@@ -251,8 +341,13 @@ const ProductsPage = () => {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="mainImage">Main Image URL</Label>
-              <Input id="mainImage" name="mainImage" required />
+              <Label htmlFor="mainImage">Main Image</Label>
+              <Input id="mainImage" name="mainImage" type="file" accept="image/*" required />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="category">Category</Label>
+              <Input id="category" name="category" placeholder="e.g., Electronics, Furniture" required />
             </div>
             
             <div className="space-y-2">
@@ -268,6 +363,52 @@ const ProductsPage = () => {
             <div className="space-y-2">
               <Label htmlFor="samplePrice">Sample Price (₹)</Label>
               <Input id="samplePrice" name="samplePrice" type="number" />
+            </div>
+
+            {/* Product Variants Section */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Product Variants</h3>
+              <div className="space-y-2">
+                <Label>Variants</Label>
+                <div className="space-y-2">
+                  {variants.map((variant, index) => (
+                    <div key={index} className="grid grid-cols-6 gap-2 items-center">
+                      <Input
+                        placeholder="Size"
+                        value={variant.size}
+                        onChange={(e) => handleVariantChange(index, "size", e.target.value)}
+                      />
+                      <Input
+                        placeholder="Price (₹)"
+                        type="number"
+                        value={variant.price}
+                        onChange={(e) => handleVariantChange(index, "price", e.target.value)}
+                      />
+                      <Input
+                        placeholder="Stock"
+                        type="number"
+                        value={variant.stock}
+                        onChange={(e) => handleVariantChange(index, "stock", e.target.value)}
+                      />
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => handleVariantFileChange(index, e.target.files?.[0] || null)}
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => removeVariant(index)}
+                      >
+                        Remove
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+                <Button type="button" onClick={addVariant}>
+                  Add Variant
+                </Button>
+              </div>
             </div>
             
             <DialogFooter>

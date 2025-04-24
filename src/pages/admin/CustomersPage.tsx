@@ -17,11 +17,7 @@ const CustomersPage = () => {
   const { data: customers, isLoading } = useQuery({
     queryKey: ["adminCustomers"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .order("created_at", { ascending: false });
-
+      const { data, error } = await supabase.auth.admin.listUsers();
       if (error) throw error;
       return data;
     },
@@ -42,22 +38,20 @@ const CustomersPage = () => {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
                 <TableHead>Email</TableHead>
                 <TableHead>Phone</TableHead>
-                <TableHead>Location</TableHead>
+                <TableHead>Last login date</TableHead>
                 <TableHead>Joined</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {customers?.map((customer: any) => (
+              {customers?.users?.map((customer: any) => (
                 <TableRow key={customer.id}>
-                  <TableCell className="font-medium">{customer.name || "N/A"}</TableCell>
                   <TableCell>{customer.email || "N/A"}</TableCell>
                   <TableCell>{customer.phone || "N/A"}</TableCell>
                   <TableCell>
-                    {customer.city && customer.state 
-                      ? `${customer.city}, ${customer.state}`
+                    {customer.last_sign_in_at 
+                      ? format(new Date(customer.last_sign_in_at), "MMM dd, yyyy")
                       : "N/A"}
                   </TableCell>
                   <TableCell>

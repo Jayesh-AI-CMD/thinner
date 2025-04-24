@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import ProductCard from "./ProductCard";
 import { Product } from "@/lib/types";
@@ -41,7 +40,6 @@ const ProductGrid = ({ products }: ProductGridProps) => {
         (min, variant) => (variant.price < min ? variant.price : min),
         p.variants[0]?.price || 0
       );
-      
       return minPrice >= filters.priceRange.min && minPrice <= filters.priceRange.max;
     });
 

@@ -172,7 +172,10 @@ export const fetchVariantById = async (productId: string, variantId: string): Pr
 // Fetch all products without variants
 export const fetchAllProducts = async () => {
   try {
-    const { data, error } = await supabase.from("products").select("*");
+    const { data, error } = await supabase.from("products").select(`
+      *,
+      product_variants (*)
+    `);
     if (error) {
       console.error("Error fetching products:", error);
       return [];

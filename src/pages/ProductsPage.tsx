@@ -8,11 +8,15 @@ const ProductsPage = () => {
   const { data: products, isLoading } = useQuery({
     queryKey: ["publicProducts"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("products").select("*");
-      if (error) throw error;
+      const { data, error } = await supabase.from("products").select(`
+        *,
+        product_variants (*)
+      `);
       return data;
     },
   });
+  console.log('data',products);
+  
 
   const mappedProducts = products?.map((product) => ({
     id: product.id,
@@ -23,7 +27,7 @@ const ProductsPage = () => {
     sampleAvailable: product.sample_available,
     samplePrice: product.sample_price,
     slug: product.slug,
-    variants: [],
+    variants: product.product_variants.map((variant) => variant),
   }));
 
   return (

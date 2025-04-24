@@ -86,7 +86,10 @@ const CheckoutPage = () => {
     }
 
     // Validate cart items' quantities and amounts
-    const calculatedSubtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const calculatedSubtotal = cartItems.reduce((sum, item) => {
+      const selectedVariant = item?.product_variants?.find((data) => data?.id == item?.variantId );
+      return sum + selectedVariant.price * item.quantity
+    }, 0);
     if (calculatedSubtotal !== cartSubtotal) {
       toast({
         variant: "destructive",
@@ -110,24 +113,18 @@ const CheckoutPage = () => {
         useGST ? gstDetails : undefined
       );
 
-      // Process the payment based on the selected method
-      if (paymentMethod === "phonepe") {
-        const paymentResponse = await initiatePhonePePayment(order.id, cartTotal / 100); // Convert to rupees
+      const paymentResponse = await initiatePhonePePayment(order.id, cartTotal / 100); // Convert to rupees
 
-        if (!paymentResponse.success) {
-          throw new Error(paymentResponse.error || "Payment failed");
-        }
-
-        // Clear the cart
-        clearCart();
-
-        // Redirect to PhonePe payment page
-        window.location.href = paymentResponse.paymentUrl as string;
-      } else if (paymentMethod === "bank_transfer") {
-        // For Bank Transfer, just redirect to confirmation
-        clearCart();
-        navigate(`/order/confirmation?orderId=${order.id}&paymentId=bank_transfer_${Date.now()}`);
+      if (!paymentResponse.redirectUrl) {
+        throw new Error(paymentResponse.error || "Payment failed");
       }
+
+      // Clear the cart
+      clearCart();
+
+      // Redirect to PhonePe payment page
+      window.location.href = paymentResponse.redirectUrl as string;
+      
     } catch (error: any) {
       console.error("Checkout error:", error);
       toast({
@@ -359,28 +356,31 @@ const CheckoutPage = () => {
               <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
 
               <div className="divide-y">
-                {cartItems.map((item, index) => (
-                  <div key={index} className="py-4 flex justify-between">
-                    <div className="flex items-start">
-                      <div className="w-16 h-16 rounded overflow-hidden mr-4">
-                        <img
-                          src={item.image || "/placeholder.svg"}
-                          alt={item.name}
-                          className="w-full h-full object-cover"
-                        />
+                {cartItems.map((item, index) => {
+                const selectedVariant = item?.product_variants?.find((data) => data?.id == item?.variantId )
+                  return (
+                    <div key={index} className="py-4 flex justify-between">
+                      <div className="flex items-start">
+                        <div className="w-16 h-16 rounded overflow-hidden mr-4">
+                          <img
+                            src={item.image || "/placeholder.svg"}
+                            alt={item.name}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <div>
+                          <p className="font-medium">{item.name}</p>
+                          <p className="text-sm text-gray-500">
+                            {item.size && `Size: ${item.size}`}
+                            {item.isSample && " (Sample)"}
+                          </p>
+                          <p className="text-sm">Qty: {item.quantity}</p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="font-medium">{item.name}</p>
-                        <p className="text-sm text-gray-500">
-                          {item.size && `Size: ${item.size}`}
-                          {item.isSample && " (Sample)"}
-                        </p>
-                        <p className="text-sm">Qty: {item.quantity}</p>
-                      </div>
+                      <p className="font-medium">₹{(selectedVariant.price * item.quantity).toLocaleString()}</p>
                     </div>
-                    <p className="font-medium">₹{(item.price * item.quantity).toLocaleString()}</p>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
 
               <Separator className="my-4" />
@@ -400,7 +400,7 @@ const CheckoutPage = () => {
                 </div>
               </div>
             </div>
-
+{/* 
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <h2 className="text-xl font-semibold mb-4">Payment Method</h2>
 
@@ -452,7 +452,7 @@ const CheckoutPage = () => {
                   </Label>
                 </div>
               </RadioGroup>
-            </div>
+            </div> */}
 
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <div className="space-y-4">
