@@ -61,14 +61,14 @@ const Header = () => {
 
   return (
     <header
-      className={`sticky top-0 w-full z-50 transition-all duration-300 ${
+      className={`sticky w-full z-50 transition-all duration-300 ${
         isScrolled ? "bg-white shadow-md py-2" : "bg-white py-4"
       }`}
     >
       <div className="container flex items-center justify-between">
         <div className="flex items-center gap-2 lg:gap-50">
           <Link to="/" className="flex items-center">
-            <img src="/public/logo.png" alt="Logo" className="h-8 w-8" />
+            <img src="/public/logo.png" alt="Logo" className="h-11 w-15" />
           </Link>
         </div>
 
@@ -76,60 +76,6 @@ const Header = () => {
           <Link to="/" className="text-gray-700 hover:text-brand-600 font-medium">
             Home
           </Link>
-          {/* <div
-            className="relative"
-            onMouseEnter={handleMouseEnterProductsMenu}
-            onMouseLeave={handleMouseLeaveProductsMenu}
-          >
-            <button
-              onClick={() => setShowProductsMenu(!showProductsMenu)}
-              className="flex items-center text-gray-700 hover:text-brand-600 font-medium"
-            >
-              Products <ChevronDown className="ml-1 h-4 w-4" />
-            </button>
-            {showProductsMenu && (
-              <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md">
-                <div className="p-2 space-y-1">
-                  <Link
-                    to="/products"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-brand-50 rounded-md"
-                  >
-                    All Products
-                  </Link>
-                  <Link
-                    to="/products/royal-gp-thinner"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-brand-50 rounded-md"
-                  >
-                    Royal GP Thinner
-                  </Link>
-                  <Link
-                    to="/products/sailac-pu-thinner"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-brand-50 rounded-md"
-                  >
-                    Sailac PU Thinner
-                  </Link>
-                  <Link
-                    to="/products/top-999-nc-thinner"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-brand-50 rounded-md"
-                  >
-                    Top 999 NC Thinner
-                  </Link>
-                  <Link
-                    to="/products/royal-2000-nc-thinner"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-brand-50 rounded-md"
-                  >
-                    Royal 2000 NC Thinner
-                  </Link>
-                  <Link
-                    to="/products/top-2000-high-gloss-nc-thinner"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-brand-50 rounded-md"
-                  >
-                    Top 2000 High Gloss NC Thinner
-                  </Link>
-                </div>
-              </div>
-            )}
-          </div> */}
           <Link to="/products" className="text-gray-700 hover:text-brand-600 font-medium">
             Products
           </Link>

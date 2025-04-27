@@ -10,13 +10,15 @@ export const createOrder = async (
   total: number,
   shippingAddress: Address,
   paymentMethod: string,
-  gstDetails?: GSTDetails
+  gstDetails?: GSTDetails,
+  coupon?: string
 ): Promise<Order> => {
+  console.log("🚀 ~ coupon:", coupon)
   console.log("🚀 ~ orderItems ~ items:", items)
   try {
     const user = supabase.auth.getUser();
     if (!user) {
-      throw new Error("User must be logged in to create an order");
+      throw new Error("User must be logged in to process the order.");
     }
 
     // Create the order
@@ -38,6 +40,7 @@ export const createOrder = async (
         gst_number: gstDetails?.gstNumber,
         gst_business_name: gstDetails?.businessName,
         gst_address: gstDetails?.address ? JSON.stringify(gstDetails.address) : null,
+        coupon_id: coupon
       })
       .select()
       .single();

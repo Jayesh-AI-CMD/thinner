@@ -29,6 +29,10 @@ import CustomersPage from "./pages/admin/CustomersPage";
 import ProductDetailPageLatest from './pages/ProductDetailPageLatest';
 import UserOrdersPage from './pages/UserOrdersPage';
 import Coupon from './pages/Coupon';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
+import TermsConditionPage from './pages/TermsConditionPage';
+import RefundPolicyPage from './pages/RefundPolicyPage';
+import ShippingPolicyPage from './pages/ShippingPolicyPage';
 
 const App = () => {
   // Create a new QueryClient instance inside the component
@@ -56,6 +60,11 @@ const App = () => {
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/orders" element={<UserOrdersPage />} />
                 <Route path="/account" element={<UserProfilePage />} />
+                <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+                <Route path="/terms-conditions" element={<TermsConditionPage />} />
+                <Route path="/refund-policy" element={<RefundPolicyPage />} />
+                <Route path="/shipping-policy" element={<ShippingPolicyPage />} />
+                
                 
                 {/* Admin Routes */}
                 <Route path="/admin" element={<Dashboard />} />

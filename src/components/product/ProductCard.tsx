@@ -18,7 +18,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
   return (
     <div className="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-      <Link to={`/product/${product.id}`}>
+      <Link to={`/products/id/${product.id}`}>
         <img
           src={product.mainImage}
           alt={product.name}

@@ -3,6 +3,7 @@ import { CartItem } from "@/lib/types";
 import { getProductById, getVariantById } from "@/lib/product-data";
 import { toast } from "sonner";
 import { useCartPersistence } from "./useCartPersistence";
+import { set } from "date-fns";
 
 interface CartContextType {
   cartItems: CartItem[];
@@ -13,6 +14,7 @@ interface CartContextType {
   cartTotal: number;
   cartSubtotal: number;
   cartTax: number;
+  discount: number;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -22,8 +24,9 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cartSubtotal, setCartSubtotal] = useState(0);
   const [cartTax, setCartTax] = useState(0);
   const [cartTotal, setCartTotal] = useState(0);
+  const [discount, setDiscount] = useState(0);
 
-  useCartPersistence(cartItems, setCartItems, setCartSubtotal, setCartTax, setCartTotal);
+  useCartPersistence(cartItems, setCartItems, setCartSubtotal, setCartTax, setCartTotal, setDiscount);
 
   const addToCart = (product: any, quantity: number, variantId?: string, isSample: boolean = false) => {
     console.log("🚀 ~ addToCart ~ productId:", product)
@@ -82,7 +85,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       clearCart,
       cartTotal,
       cartSubtotal,
-      cartTax
+      cartTax,
+      discount
     }}>
       {children}
     </CartContext.Provider>

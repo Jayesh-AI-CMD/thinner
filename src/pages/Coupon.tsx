@@ -127,7 +127,7 @@ const Coupon = () => {
               <label className="block text-sm font-medium mb-1">Discount Type</label>
               <select
                 name="discount_type"
-                value={formData.discount_type}
+                value={formData?.discount_type}
                 onChange={handleChange}
                 className="w-full border rounded px-3 py-2"
                 required
@@ -235,10 +235,30 @@ const Coupon = () => {
                 <TableCell>{coupon.code}</TableCell>
                 <TableCell>{coupon.description}</TableCell>
                 <TableCell>
-                  {coupon.discount_type === "percentage"
-                    ? `${coupon.discount_value}%`
-                    : `₹${coupon.discount_value}`}
+                  {coupon?.discount_type === "percentage"
+                    ? `${coupon?.discount_value}%`
+                    : `₹${coupon?.discount_value}`}
                 </TableCell>
+                <TableCell>
+          <Button
+            size="sm"
+            variant={coupon.active ? "outline" : "outline"}
+            onClick={async () => {
+              const { error } = await supabase
+                .from("coupons")
+                .update({ active: !coupon.active })
+                .eq("id", coupon.id);
+              if (error) {
+                console.error("Error updating coupon status:", error);
+              } else {
+                alert(`Coupon ${coupon.active ? "disabled" : "enabled"} successfully!`);
+                fetchCoupons();
+              }
+            }}
+          >
+            {coupon.active ? "Active" : "Inactive"}
+          </Button>
+        </TableCell>
                 <TableCell>
                   <Button size="sm" variant="outline" onClick={() => handleEdit(coupon)}>
                     Edit

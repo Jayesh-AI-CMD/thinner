@@ -23,6 +23,7 @@ export const initiatePhonePePayment = async (
     // Get the base URL dynamically
     const baseUrl = window.location.origin;
     const callbackUrl = `${baseUrl}/order/confirmation`;
+    // const callbackUrl = `https://thinnermart.com/order/confirmation`;
 
     // Get the current authenticated user
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -32,7 +33,7 @@ export const initiatePhonePePayment = async (
     }
 
     // Invoke the PhonePe payment Edge Function
-    const { data, error } = await supabase.functions.invoke("phonepe-init", {
+    const { data, error } = await supabase.functions.invoke("phonepe-init-live", {
       body: {
         amount: amount * 100,
         orderId: orderId,

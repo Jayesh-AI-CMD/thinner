@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth"; // Assuming you have an Auth hook
 import { supabase } from "@/integrations/supabase/client";
+import Layout from "@/components/layout/Layout";
 
 const UserProfilePage = () => {
   const { user } = useAuth(); // Get the logged-in user
@@ -71,6 +72,7 @@ const UserProfilePage = () => {
   if (isLoading) return <p>Loading...</p>;
 
   return (
+    <Layout>
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">My Profile</h1>
       {!isEditing ? (
@@ -212,6 +214,7 @@ const UserProfilePage = () => {
         </form>
       )}
     </div>
+    </Layout>
   );
 };
 

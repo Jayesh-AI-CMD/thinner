@@ -63,25 +63,30 @@ const ContactPage = () => {
             Have questions about our products or services? Get in touch with our team, and we'll be happy to help you.
           </p>
 
+        
           <div className="grid md:grid-cols-2 gap-8 mb-8">
             <div>
               <h2 className="text-xl font-semibold mb-4">Our Information</h2>
               
               <div className="space-y-4">
+              <div>
+                  <p className="font-medium">Merchant Legal entity name</p>
+                  <p className="text-gray-600">mehta corporation</p>
+                </div>
+
                 <div>
                   <p className="font-medium">Address</p>
-                  <p className="text-gray-600">123 Industrial Area, Phase 1</p>
-                  <p className="text-gray-600">New Delhi, India 110001</p>
+                  <p className="text-gray-600">W 228, Dombivali Industrial Area Phase 2, MIDC PHASE II, MIDC, DOMBIVLI EAST, Kalyan Thane MAHARASHTRA 421201</p>
                 </div>
                 
                 <div>
                   <p className="font-medium">Phone</p>
-                  <p className="text-gray-600">+91 98765 43210</p>
+                  <p className="text-gray-600">+91 8452006089</p>
                 </div>
                 
                 <div>
                   <p className="font-medium">Email</p>
-                  <p className="text-gray-600">info@thinnermart.com</p>
+                  <p className="text-gray-600">thinnermart@gmail.com</p>
                 </div>
                 
                 <div>

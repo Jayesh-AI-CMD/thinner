@@ -7,15 +7,15 @@ const KeyBenefits = () => {
       <div className="container">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Key Benefits of Our Products</h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          {/* <p className="text-lg text-gray-600 max-w-3xl mx-auto">
             Discover why professionals and businesses across India trust our premium quality thinners for their painting and industrial needs.
-          </p>
+          </p> */}
         </div>
 
-        <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
+        {/* <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
           <div className="w-full md:w-1/2">
             <img 
-              src="public/benifit.png" 
+              src="/public/benifit.png" 
               alt="Product Benefits" 
               className="rounded-lg shadow-lg w-full object-cover"
               style={{ maxHeight: "500px" }}
@@ -93,6 +93,9 @@ const KeyBenefits = () => {
               </div>
             </div>
           </div>
+        </div> */}
+        <div className="flex justify-center">
+          <img src="/public/key_banifits.png" alt="" />
         </div>
       </div>
     </section>

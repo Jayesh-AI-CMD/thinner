@@ -268,6 +268,71 @@ const ProductDetailPageLatest = () => {
                   ))}
                 </ul>
               </div>
+
+              {/* Application */}
+              <div className="bg-gray-50 rounded-lg p-4 mb-6">
+                <h3 className="font-medium mb-3">Application</h3>
+                <ul className="space-y-2">
+                  {product.application.map((item: string, index: number) => (
+                    <li key={index} className="flex items-start">
+                      <ChevronRight className="h-5 w-5 text-brand-600 mr-2 flex-shrink-0 mt-0.5" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Key Benefits */}
+              <div className="bg-gray-50 rounded-lg p-4 mb-6">
+                <h3 className="font-medium mb-3">Key Benefits</h3>
+                <ul className="space-y-2">
+                  {product.key_benefits.map((item: string, index: number) => (
+                    <li key={index} className="flex items-start">
+                      <Check className="h-5 w-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Application Method */}
+              <div className="bg-gray-50 rounded-lg p-4 mb-6">
+                <h3 className="font-medium mb-3">Application Method</h3>
+                <ul className="space-y-2">
+                  {product.application_method.map((item: string, index: number) => (
+                    <li key={index} className="flex items-start">
+                      <ChevronRight className="h-5 w-5 text-brand-600 mr-2 flex-shrink-0 mt-0.5" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Precautions */}
+              <div className="bg-gray-50 rounded-lg p-4 mb-6">
+                <h3 className="font-medium mb-3">Precautions</h3>
+                <ul className="space-y-2">
+                  {product.precautions.map((item: string, index: number) => (
+                    <li key={index} className="flex items-start">
+                      <ChevronRight className="h-5 w-5 text-red-500 mr-2 flex-shrink-0 mt-0.5" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Storage & Handling */}
+              <div className="bg-gray-50 rounded-lg p-4 mb-6">
+                <h3 className="font-medium mb-3">Storage & Handling</h3>
+                <ul className="space-y-2">
+                  {product.storage_handling.map((item: string, index: number) => (
+                    <li key={index} className="flex items-start">
+                      <ChevronRight className="h-5 w-5 text-brand-600 mr-2 flex-shrink-0 mt-0.5" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
 

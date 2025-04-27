@@ -18,18 +18,21 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { format } from "date-fns";
 import html2pdf from "html2pdf.js";
 
 const UserOrdersPage = () => {
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
   const [isDownloading, setIsDownloading] = useState<any>(false);
+  const [filterStatus, setFilterStatus] = useState<string | null>("");
+  const [sortOption, setSortOption] = useState<string>("created_at_desc");
 
   // Fetch orders
   const { data: orders, isLoading } = useQuery({
-    queryKey: ["userOrders"],
+    queryKey: ["userOrders", filterStatus, sortOption],
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from("orders")
         .select(
           `
@@ -39,15 +42,32 @@ const UserOrdersPage = () => {
           product_variants (*)
         )
       `
-        )
-        .order("created_at", { ascending: false });
+        );
+
+      // Apply filter
+      if (filterStatus) {
+        if(filterStatus !== "all") {
+          query = query.eq("status", filterStatus);
+        }
+      }
+
+      // Apply sorting
+      if (sortOption === "created_at_desc") {
+        query = query.order("created_at", { ascending: false });
+      } else if (sortOption === "created_at_asc") {
+        query = query.order("created_at", { ascending: true });
+      } else if (sortOption === "total_desc") {
+        query = query.order("total", { ascending: false });
+      } else if (sortOption === "total_asc") {
+        query = query.order("total", { ascending: true });
+      }
+
+      const { data, error } = await query;
 
       if (error) {
         console.error("Supabase Query Error:", error);
-      } else {
-        console.log("Orders Data:", data);
+        throw error;
       }
-      if (error) throw error;
       return data;
     },
   });
@@ -60,7 +80,7 @@ const UserOrdersPage = () => {
         return "bg-blue-100 text-blue-800";
       case "shipped":
         return "bg-purple-100 text-purple-800";
-      case "delivered":
+      case "completed":
         return "bg-green-100 text-green-800";
       case "cancelled":
         return "bg-red-100 text-red-800";
@@ -99,6 +119,36 @@ const UserOrdersPage = () => {
       <div className="space-y-6 container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold">My Orders</h1>
 
+        {/* Filter and Sort Options */}
+        <div className="flex items-center justify-between space-y-4 md:space-y-0 md:space-x-4">
+          <Select onValueChange={(value) => setFilterStatus(value)} value={filterStatus || ""}>
+            <SelectTrigger className="w-48">
+              <SelectValue placeholder="Filter by Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All</SelectItem>
+              <SelectItem value="pending">Pending</SelectItem>
+              {/* <SelectItem value="processing">Processing</SelectItem>
+              <SelectItem value="shipped">Shipped</SelectItem> */}
+              <SelectItem value="completed">Payment Completed</SelectItem>
+              <SelectItem value="cancelled">Cancelled</SelectItem>
+            </SelectContent>
+          </Select>
+
+          {/* Sort by Options */}
+          <Select onValueChange={(value) => setSortOption(value)} value={sortOption}>
+            <SelectTrigger className="w-48">
+              <SelectValue placeholder="Sort by" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="created_at_desc">Date: Newest First</SelectItem>
+              <SelectItem value="created_at_asc">Date: Oldest First</SelectItem>
+              <SelectItem value="total_desc">Total: High to Low</SelectItem>
+              <SelectItem value="total_asc">Total: Low to High</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
         {isLoading ? (
           <div className="animate-pulse space-y-2">
             {[1, 2, 3, 4, 5].map((i) => (
@@ -126,9 +176,10 @@ const UserOrdersPage = () => {
                     {format(new Date(order.created_at), "MMM dd, yyyy")}
                   </TableCell>
                   <TableCell>₹{order.total.toLocaleString()}</TableCell>
-                  <TableCell className="">
-                    {/* <Badge className={getStatusColor(order.status)}> */}
+                  <TableCell>
+                    <Badge className={getStatusColor(order.status)}>
                       {order.status}
+                    </Badge>
                   </TableCell>
                   <TableCell>
                     <Button
@@ -181,7 +232,7 @@ const UserOrdersPage = () => {
                 </div>
                 <div>
                   <img
-                    src="/public/logo.png" // Replace with the actual logo path
+                    src="../assets/logo.png" // Replace with the actual logo path
                     alt="Seller Logo"
                     className="h-16"
                   />

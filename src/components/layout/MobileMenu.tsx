@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -10,164 +10,95 @@ interface MobileMenuProps {
 const MobileMenu = ({ onClose }: MobileMenuProps) => {
   const { user, signOut } = useAuth();
 
+  const menuItemClass =
+    "flex items-center justify-between p-3 rounded-md text-lg font-medium text-gray-700 hover:bg-gray-100 hover:text-brand-600";
+
   return (
     <div className="fixed inset-0 z-50 md:hidden">
-      <div 
+      {/* Overlay */}
+      <div
         className="absolute inset-0 bg-black/50"
         onClick={onClose}
       ></div>
+
+      {/* Menu Panel */}
       <div className="absolute right-0 top-0 h-full w-4/5 max-w-sm bg-white shadow-xl animate-slide-in-right">
         <div className="flex flex-col h-full">
-          <div className="p-4 border-b">
-            <div className="flex justify-between items-center">
-              <h2 className="text-xl font-bold">Menu</h2>
-              <Button variant="ghost" size="icon" onClick={onClose}>
-                <ChevronRight className="h-6 w-6" />
-              </Button>
-            </div>
+          {/* Header */}
+          <div className="p-4 border-b flex justify-between items-center">
+            <h2 className="text-xl font-bold">Menu</h2>
+            <Button variant="ghost" size="icon" onClick={onClose}>
+              <X className="h-6 w-6" />
+            </Button>
           </div>
 
+          {/* Navigation Links */}
           <nav className="flex-1 p-4 overflow-auto">
             <ul className="space-y-4">
               <li>
-                <Link 
-                  to="/" 
-                  className="flex items-center justify-between p-3 rounded-md hover:bg-gray-100"
-                  onClick={onClose}
-                >
-                  <span className="text-lg font-medium">Home</span>
+                <Link to="/" className={menuItemClass} onClick={onClose}>
+                  <span>Home</span>
                   <ChevronRight className="h-5 w-5 text-gray-400" />
                 </Link>
               </li>
               <li>
-                <Link 
-                  to="/products" 
-                  className="flex items-center justify-between p-3 rounded-md hover:bg-gray-100"
-                  onClick={onClose}
-                >
-                  <span className="text-lg font-medium">Products</span>
-                  <ChevronRight className="h-5 w-5 text-gray-400" />
-                </Link>
-              </li>
-              <li className="pl-4 border-l-2 border-gray-200">
-                <Link 
-                  to="/products/royal-gp-thinner" 
-                  className="flex items-center justify-between p-3 rounded-md hover:bg-gray-100"
-                  onClick={onClose}
-                >
-                  <span className="text-base">Royal GP Thinner</span>
-                  <ChevronRight className="h-5 w-5 text-gray-400" />
-                </Link>
-              </li>
-              <li className="pl-4 border-l-2 border-gray-200">
-                <Link 
-                  to="/products/sailac-pu-thinner" 
-                  className="flex items-center justify-between p-3 rounded-md hover:bg-gray-100"
-                  onClick={onClose}
-                >
-                  <span className="text-base">Sailac PU Thinner</span>
-                  <ChevronRight className="h-5 w-5 text-gray-400" />
-                </Link>
-              </li>
-              <li className="pl-4 border-l-2 border-gray-200">
-                <Link 
-                  to="/products/top-999-nc-thinner" 
-                  className="flex items-center justify-between p-3 rounded-md hover:bg-gray-100"
-                  onClick={onClose}
-                >
-                  <span className="text-base">Top 999 NC Thinner</span>
-                  <ChevronRight className="h-5 w-5 text-gray-400" />
-                </Link>
-              </li>
-              <li className="pl-4 border-l-2 border-gray-200">
-                <Link 
-                  to="/products/royal-2000-nc-thinner" 
-                  className="flex items-center justify-between p-3 rounded-md hover:bg-gray-100"
-                  onClick={onClose}
-                >
-                  <span className="text-base">Royal 2000 NC Thinner</span>
-                  <ChevronRight className="h-5 w-5 text-gray-400" />
-                </Link>
-              </li>
-              <li className="pl-4 border-l-2 border-gray-200">
-                <Link 
-                  to="/products/top-2000-high-gloss-nc-thinner" 
-                  className="flex items-center justify-between p-3 rounded-md hover:bg-gray-100"
-                  onClick={onClose}
-                >
-                  <span className="text-base">Top 2000 High Gloss NC Thinner</span>
+                <Link to="/products" className={menuItemClass} onClick={onClose}>
+                  <span>Products</span>
                   <ChevronRight className="h-5 w-5 text-gray-400" />
                 </Link>
               </li>
               <li>
-                <Link 
-                  to="/about" 
-                  className="flex items-center justify-between p-3 rounded-md hover:bg-gray-100"
-                  onClick={onClose}
-                >
-                  <span className="text-lg font-medium">About Us</span>
+                <Link to="/about" className={menuItemClass} onClick={onClose}>
+                  <span>About Us</span>
                   <ChevronRight className="h-5 w-5 text-gray-400" />
                 </Link>
               </li>
               <li>
-                <Link 
-                  to="/contact" 
-                  className="flex items-center justify-between p-3 rounded-md hover:bg-gray-100"
-                  onClick={onClose}
-                >
-                  <span className="text-lg font-medium">Contact</span>
+                <Link to="/contact" className={menuItemClass} onClick={onClose}>
+                  <span>Contact</span>
                   <ChevronRight className="h-5 w-5 text-gray-400" />
                 </Link>
               </li>
             </ul>
+
+            {/* User Links */}
             {user && (
-              <div className="mt-4">
-                <ul className="space-y-2">
+              <div className="mt-6">
+                <ul className="space-y-4">
                   <li>
-                    <Link 
-                      to="/dashboard" 
-                      className="block text-gray-700 hover:text-brand-600"
-                      onClick={onClose}
-                    >
-                      Dashboard
+                    <Link to="/dashboard" className={menuItemClass} onClick={onClose}>
+                      <span>Dashboard</span>
+                      <ChevronRight className="h-5 w-5 text-gray-400" />
                     </Link>
                   </li>
                   <li>
-                    <Link 
-                      to="/orders" 
-                      className="block text-gray-700 hover:text-brand-600"
-                      onClick={onClose}
-                    >
-                      Orders
+                    <Link to="/orders" className={menuItemClass} onClick={onClose}>
+                      <span>Orders</span>
+                      <ChevronRight className="h-5 w-5 text-gray-400" />
                     </Link>
                   </li>
                   <li>
-                    <Link 
-                      to="/downloads" 
-                      className="block text-gray-700 hover:text-brand-600"
-                      onClick={onClose}
-                    >
-                      Downloads
+                    <Link to="/downloads" className={menuItemClass} onClick={onClose}>
+                      <span>Downloads</span>
+                      <ChevronRight className="h-5 w-5 text-gray-400" />
                     </Link>
                   </li>
                   <li>
-                    <Link 
-                      to="/account-details" 
-                      className="block text-gray-700 hover:text-brand-600"
-                      onClick={onClose}
-                    >
-                      Account Details
+                    <Link to="/account-details" className={menuItemClass} onClick={onClose}>
+                      <span>Account Details</span>
+                      <ChevronRight className="h-5 w-5 text-gray-400" />
                     </Link>
                   </li>
                   <li>
-                    <button 
+                    <button
                       onClick={() => {
                         signOut();
                         onClose();
-                      }} 
-                      className="block text-gray-700 hover:text-brand-600"
+                      }}
+                      className={`${menuItemClass} text-left`}
                     >
-                      Logout
+                      <span>Logout</span>
+                      <ChevronRight className="h-5 w-5 text-gray-400" />
                     </button>
                   </li>
                 </ul>
@@ -175,25 +106,21 @@ const MobileMenu = ({ onClose }: MobileMenuProps) => {
             )}
           </nav>
 
-          <div className="p-4 border-t">
-            <div className="space-y-3">
-              <Link to="/login" onClick={onClose}>
-                <Button 
-                  variant="outline" 
-                  className="w-full justify-start"
-                >
-                  Sign In
-                </Button>
-              </Link>
-              <Link to="/register" onClick={onClose}>
-                <Button 
-                  className="w-full justify-start"
-                >
-                  Create Account
-                </Button>
-              </Link>
+          {/* Footer Buttons */}
+          {!user && (
+            <div className="p-4 border-t">
+              <div className="space-y-3">
+                <Link to="/login" onClick={onClose}>
+                  <Button variant="outline" className="w-full justify-center">
+                    Sign In
+                  </Button>
+                </Link>
+                <Link to="/register" onClick={onClose}>
+                  <Button className="w-full justify-center">Create Account</Button>
+                </Link>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

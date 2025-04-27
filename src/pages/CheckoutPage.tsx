@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "@/hooks/useCart";
 import { useAuth } from "@/hooks/useAuth";
 import Layout from "@/components/layout/Layout";
@@ -15,11 +15,12 @@ import { initiatePhonePePayment } from "@/services/paymentService";
 import { CreditCard, Truck, AlertCircle } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { Address, CartItem, GSTDetails } from "@/lib/types";
+import { supabase } from "@/integrations/supabase/client";
 
 // Removed unused CartContextType interface
 
 const CheckoutPage = () => {
-  const { cartItems, cartTotal, cartSubtotal, cartTax, clearCart } = useCart();
+  const { cartItems, cartTotal, cartSubtotal, cartTax, clearCart,discount } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -37,6 +38,8 @@ const CheckoutPage = () => {
     country: "India",
   });
 
+  const [couponCode, setCouponCode] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState<any>(null);
   const [useGST, setUseGST] = useState(false);
   const [gstDetails, setGstDetails] = useState<GSTDetails>({
     gstNumber: "",
@@ -73,6 +76,45 @@ const CheckoutPage = () => {
     }
   };
 
+  // Fetch active coupons
+  const fetchActiveCoupon = async () => {
+    const { data, error } = await supabase
+      .from("coupons")
+      .select("*")
+      .eq("active", true)
+        .single();
+
+    if (error) {
+      console.error("Error fetching coupon:", error);
+      toast({
+        variant: "destructive",
+        title: "Invalid Coupon",
+        description: "The coupon code is invalid or expired.",
+      });
+      return null;
+    }
+      setAppliedCoupon(data);
+      localStorage.setItem("coupon", JSON.stringify(data));
+      toast({
+        title: "Coupon Applied",
+        description: `Coupon "${data.code}" applied successfully.`,
+        variant: "default",
+      });
+
+  };
+
+  useEffect(() => {
+    const savedCoupon = localStorage.getItem("coupon");
+    if (savedCoupon) {
+      setAppliedCoupon(JSON.parse(savedCoupon));
+      setCouponCode(JSON.parse(savedCoupon).code);
+    } else {
+      fetchActiveCoupon();
+    }
+  }, []);
+
+ 
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -87,9 +129,10 @@ const CheckoutPage = () => {
 
     // Validate cart items' quantities and amounts
     const calculatedSubtotal = cartItems.reduce((sum, item) => {
-      const selectedVariant = item?.product_variants?.find((data) => data?.id == item?.variantId );
-      return sum + selectedVariant.price * item.quantity
+      const selectedVariant = item?.product_variants?.find((data) => data?.id == item?.variantId);
+      return sum + selectedVariant.price * item.quantity;
     }, 0);
+
     if (calculatedSubtotal !== cartSubtotal) {
       toast({
         variant: "destructive",
@@ -102,7 +145,7 @@ const CheckoutPage = () => {
     setLoading(true);
 
     try {
-      // Create the order first
+      // Create the order
       const order = await createOrder(
         cartItems,
         cartSubtotal,
@@ -110,21 +153,39 @@ const CheckoutPage = () => {
         cartTotal,
         shippingAddress,
         paymentMethod,
-        useGST ? gstDetails : undefined
+        useGST ? gstDetails : undefined,
+        appliedCoupon?.id // Pass the coupon_id if a coupon is applied
       );
 
-      // const paymentResponse = await initiatePhonePePayment(order.id, cartTotal / 100); // Convert to rupees
+      console.log("🚀 ~ handleSubmit ~ order:", order);
+
+      // Initiate PhonePe payment
+      const paymentResponse = await initiatePhonePePayment(order.id, cartTotal / 100); // Convert to rupees
+      console.log("🚀 ~ handleSubmit ~ paymentResponse:", paymentResponse);
 
       if (!paymentResponse.redirectUrl) {
         throw new Error(paymentResponse.error || "Payment failed");
       }
 
+      const paymentId = paymentResponse?.orderId;
+      console.log("🚀 ~ handleSubmit ~ paymentId:", paymentId);
+
+      // Update the order table with payment details
+      const { error: updateError } = await supabase
+        .from("orders")
+        .update({ payment_id: paymentId })
+        .eq("id", order.id);
+
+      if (updateError) {
+        console.error("Error updating order:", updateError);
+        throw new Error("Failed to update order details.");
+      }
+
       // Clear the cart
-      // clearCart();
+      clearCart();
 
       // Redirect to PhonePe payment page
       window.location.href = paymentResponse.redirectUrl as string;
-      
     } catch (error: any) {
       console.error("Checkout error:", error);
       toast({
@@ -157,6 +218,7 @@ const CheckoutPage = () => {
         <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-8">
           {/* Left Column - Customer Information */}
           <div className="space-y-8">
+          
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <h2 className="text-xl font-semibold mb-4">Shipping Information</h2>
 
@@ -352,6 +414,29 @@ const CheckoutPage = () => {
 
           {/* Right Column - Order Summary and Payment */}
           <div className="space-y-8">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <h2 className="text-xl font-semibold mb-4">Apply Coupon</h2>
+              <div className="flex items-center space-x-4">
+                <Input
+                  type="text"
+                  placeholder="Enter coupon code"
+                  value={couponCode}
+                  onChange={(e) => setCouponCode(e.target.value)}
+                />
+                <Button type="button" disabled={true}>
+                  Applied
+                </Button>
+              </div>
+              {appliedCoupon && (
+                <p className="mt-2 text-sm text-green-600">
+                  Coupon "{appliedCoupon.code}" applied. Discount:{" "}
+                  {appliedCoupon?.discount_type === "percentage"
+                    ? `${appliedCoupon.discount_value}%`
+                    : `₹${appliedCoupon.discount_value}`}
+                </p>
+              )}
+            </div>
+            
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
 
@@ -363,7 +448,7 @@ const CheckoutPage = () => {
                       <div className="flex items-start">
                         <div className="w-16 h-16 rounded overflow-hidden mr-4">
                           <img
-                            src={item.image || "/placeholder.svg"}
+                            src={selectedVariant.image || "/placeholder.svg"}
                             alt={item.name}
                             className="w-full h-full object-cover"
                           />
@@ -391,8 +476,12 @@ const CheckoutPage = () => {
                   <span>₹{cartSubtotal.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>GST (18%)</span>
+                  <span> + GST (18%)</span>
                   <span>₹{cartTax.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>- Coupon</span>
+                  <span>₹{discount.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-lg font-bold mt-2">
                   <span>Total</span>
@@ -462,7 +551,7 @@ const CheckoutPage = () => {
                 </div>
 
                 <div className="bg-gray-50 rounded-md p-4 text-sm">
-                  <p>By placing this order, you agree to our <a href="#" className="text-primary underline">Terms and Conditions</a> and <a href="#" className="text-primary underline">Privacy Policy</a>.</p>
+                  <p>By placing this order, you agree to our <Link to={'/terms-conditions'} className="text-primary underline">Terms and Conditions</Link> and <Link to={'/privacy-policy'} className="text-primary underline">Privacy Policy</Link>.</p>
                 </div>
 
                 <Button type="submit" className="w-full" size="lg" disabled={loading}>

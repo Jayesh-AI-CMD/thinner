@@ -1,14 +1,14 @@
-
 import { useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
-// Slider data
+// Updated slides array with separate images for mobile and desktop
 const slides = [
   {
     id: 1,
-    image: "/public/1.jpg",
+    desktopImage: "/public/1.jpg",
+    mobileImage: "/public/mobile-1.png",
     title: "Premium Quality Thinners",
     subtitle: "For Professional Painters & Industrial Applications",
     cta: "Shop Now",
@@ -16,7 +16,8 @@ const slides = [
   },
   {
     id: 2,
-    image: "/public/2.jpg",
+    desktopImage: "/public/2.jpg",
+    mobileImage: "/public/mobile-2.png",
     title: "Royal GP Thinner",
     subtitle: "The Most Versatile General Purpose Thinner",
     cta: "View Details",
@@ -24,7 +25,8 @@ const slides = [
   },
   {
     id: 3,
-    image: "/public/3.jpg",
+    desktopImage: "/public/3.jpg",
+    mobileImage: "/public/mobile-3.png",
     title: "Sailac PU Thinner",
     subtitle: "Perfect for Polyurethane Coatings",
     cta: "Learn More",
@@ -32,7 +34,8 @@ const slides = [
   },
   {
     id: 4,
-    image: "/public/4.jpg",
+    desktopImage: "/public/4.jpg",
+    mobileImage: "/public/mobile-4.png",
     title: "Top 999 NC Thinner",
     subtitle: "For Premium Nitrocellulose Finishes",
     cta: "Explore",
@@ -40,7 +43,8 @@ const slides = [
   },
   {
     id: 5,
-    image: "/public/5.jpg",
+    desktopImage: "/public/5.jpg",
+    mobileImage: "/public/mobile-5.png",
     title: "Industrial Strength Solutions",
     subtitle: "For Manufacturing & Wholesale Needs",
     cta: "Contact Us",
@@ -95,11 +99,15 @@ const HeroSlider = () => {
             {/* Slide Background */}
             <div 
               className="absolute inset-0 bg-cover bg-center"
-              style={{ backgroundImage: `url(${slide.image})` }}
+              style={{
+                backgroundImage: `url(${
+                  window.innerWidth < 768 ? slide.mobileImage : slide.desktopImage
+                })`
+              }}
             ></div>
             
             {/* Slide Content */}
-            <div className="relative h-full z-20">
+           {window.innerWidth > 768 && <div className="relative h-full z-20">
               <div className="container h-full flex items-center">
                 <div className="max-w-lg text-white p-6">
                   <h2 
@@ -139,7 +147,7 @@ const HeroSlider = () => {
                   </Link>
                 </div>
               </div>
-            </div>
+            </div>}
           </div>
         ))}
       </div>

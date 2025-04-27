@@ -13,6 +13,7 @@ const CartPage = () => {
     cartSubtotal,
     cartTax,
     cartTotal,
+    discount
   } = useCart();
   console.log("🚀 ~ CartPage ~ cartItems:", cartItems);
   const navigate = useNavigate();
@@ -146,10 +147,13 @@ const CartPage = () => {
                     </div>
 
                     <div className="flex justify-between">
-                      <span className="text-gray-600">GST (18%)</span>
+                      <span className="text-gray-600">+ GST (18%)</span>
                       <span>₹{cartTax.toFixed(2)}</span>
                     </div>
-
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">- Coupon</span>
+                      <span>₹{discount.toFixed(2)}</span>
+                    </div>
                     <div className="border-t pt-3 mt-3">
                       <div className="flex justify-between font-semibold text-lg">
                         <span>Total</span>
